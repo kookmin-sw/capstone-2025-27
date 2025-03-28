@@ -46,11 +46,11 @@ export function getUserRoadmap(user : USER) : ROADMAP {
     return roadmap
 }
 
-export function userLogin(user : USER) : number {
+export function userSignIn(user : USER) : number {
     // check user info in database
     return 0 // success 1, fail 0
 }
-export function userSignIn(user : USER) {
+export function userSignUp(user : USER) {
     // create new user with user credentials
     return 0 // success 1, fail 0
 }
