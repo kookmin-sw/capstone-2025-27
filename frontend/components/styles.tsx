@@ -1,0 +1,50 @@
+import { StyleSheet, Dimensions } from "react-native"
+
+export const primaryColor = "#FFFFFF"
+export const secondaryColor = "#58C6E7"
+export const fontfamily = "monospace"
+
+const {height, width} = Dimensions.get("screen")
+export function unitSpaceHeight(val : number) {
+    return height/200 * val
+}
+export function unitSpaceWidth(val : number) {
+    return width/200 * val
+}
+
+export const authStyles = StyleSheet.create({
+    titleText: {
+        color: secondaryColor,
+        fontSize: unitSpaceHeight(10),
+        fontFamily: fontfamily,
+        textAlign: "center"
+    },
+    subText: {
+        color: secondaryColor,
+        fontSize: unitSpaceHeight(4.5),
+        fontFamily: fontfamily,
+        textAlign: "left",
+        marginBlockEnd: unitSpaceHeight(2)
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: "#000000",
+        borderCurve: "circular",
+        borderRadius: 10
+    },
+    inputField: {
+        marginBlockStart: unitSpaceHeight(13),
+        justifyContent: "space-around",
+        padding: unitSpaceWidth(30),
+        height: unitSpaceHeight(80),
+    },
+    button: {
+        backgroundColor: secondaryColor,
+        width: unitSpaceWidth(60),
+    },
+    buttonText: {
+        textAlign: "center",
+        color: primaryColor,
+        padding: unitSpaceWidth(5)
+    }
+})
