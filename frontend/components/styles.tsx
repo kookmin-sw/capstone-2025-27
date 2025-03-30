@@ -15,7 +15,7 @@ export function unitSpaceWidth(val : number) {
 export const authStyles = StyleSheet.create({
     titleText: {
         color: secondaryColor,
-        fontSize: unitSpaceHeight(10),
+        fontSize: unitSpaceHeight(9),
         fontFamily: fontfamily,
         textAlign: "center"
     },
@@ -41,10 +41,17 @@ export const authStyles = StyleSheet.create({
     button: {
         backgroundColor: secondaryColor,
         width: unitSpaceWidth(60),
+        borderCurve: "circular",
+        borderRadius: unitSpaceHeight(2),
+        marginBlockEnd: unitSpaceHeight(10)
     },
     buttonText: {
         textAlign: "center",
         color: primaryColor,
         padding: unitSpaceWidth(5)
+    },
+    goto: {
+        color: secondaryColor,
+        textDecorationLine: "underline"
     }
 })
