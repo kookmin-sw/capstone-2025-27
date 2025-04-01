@@ -22,6 +22,13 @@ declare global {
     }
 }
 
+export const defaultUser : USER = {
+    email: "",
+    username: "",
+    password: "",
+    roadmapId: 0,
+}
+
 const todo1 : TODO = {
     date: new Date(),
     todos: [
@@ -46,11 +53,11 @@ export function getUserRoadmap(user : USER) : ROADMAP {
     return roadmap
 }
 
-export function userSignIn(user : USER) : number {
+export function userSignIn(user : USER) : boolean {
     // check user info in database
-    return 0 // success 1, fail 0
+    return false // success true, fail false
 }
-export function userSignUp(user : USER) {
+export function userSignUp(user : USER) : boolean {
     // create new user with user credentials
-    return 0 // success 1, fail 0
+    return false // success true, fail false
 }

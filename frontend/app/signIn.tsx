@@ -1,15 +1,23 @@
 import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { authStyles, unitSpaceHeight, unitSpaceWidth } from "@/components/styles";
 import { useState } from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { defaultUser, userSignIn } from "../api"
 
 export default function SignIn() {
 
-    const [inputEmail, setInputEmail] = useState<string>();
-    const [inputPwd, setInputPwd] = useState<string>();
+    const [user, setUser] = useState<USER>(defaultUser);
+    const router = useRouter()
 
-    const login = () => {
-        console.log(inputEmail, " --- ", inputPwd)
+    const login = async () : Promise<boolean> => {
+        console.log(user.email, " --- ", user.password)
+        const res = await userSignIn(user)
+        if (res) {
+            router.push("/(tabs)")
+        } else {
+            console.log("Incorrect Username or Password")
+        }
+        return res;
     }
 
     return (
@@ -18,11 +26,26 @@ export default function SignIn() {
         <View style={authStyles.inputField}>
             <View>
                 <Text style={authStyles.subText}>이메일</Text>
-                <TextInput style={authStyles.textInput} placeholder="이메일" value={inputEmail} onChangeText={setInputEmail} />
+                <TextInput
+                style={authStyles.textInput} 
+                placeholder="이메일" value={user.email} 
+                onChangeText={(mail) => setUser({...user, email:mail})}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                />
             </View>
             <View>`
                 <Text style={authStyles.subText}>비밀번호</Text>
-                <TextInput style={authStyles.textInput} secureTextEntry={true} placeholder="비밀번호" value={inputPwd} onChangeText={setInputPwd} />`
+                <TextInput 
+                style={authStyles.textInput} 
+                secureTextEntry={true} 
+                placeholder="비밀번호" 
+                value={user.password} 
+                onChangeText={(pwd) => {setUser({...user, password: pwd})}}
+                autoCorrect={false}
+                autoCapitalize="none"
+                />`
             </View>
         </View>
         <View style={{alignItems: "center"}}>

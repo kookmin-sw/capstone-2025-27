@@ -24,7 +24,7 @@ export const authStyles = StyleSheet.create({
         fontSize: unitSpaceHeight(4.5),
         fontFamily: fontfamily,
         textAlign: "left",
-        marginBlockEnd: unitSpaceHeight(2)
+        marginBlockEnd: unitSpaceHeight(1)
     },
     textInput: {
         borderWidth: 1,
@@ -33,10 +33,10 @@ export const authStyles = StyleSheet.create({
         borderRadius: 10
     },
     inputField: {
-        marginBlockStart: unitSpaceHeight(13),
+        marginBlockStart: unitSpaceHeight(10),
         justifyContent: "space-around",
         padding: unitSpaceWidth(30),
-        height: unitSpaceHeight(80),
+        height: unitSpaceHeight(90),
     },
     button: {
         backgroundColor: secondaryColor,

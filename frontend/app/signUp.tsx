@@ -1,5 +1,74 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { authStyles, unitSpaceHeight, unitSpaceWidth } from "@/components/styles";
+import { useState } from "react";
+import { Link, useRouter } from "expo-router";
+import { defaultUser, userSignUp } from "../api"
 
 export default function SignUp() {
-    return <Text>Sign Up Page</Text>
-}
+
+    const [user, setUser] = useState<USER>(defaultUser);
+    const router = useRouter()
+
+    const login = async () : Promise<boolean> => {
+        console.log(user.email, " --- ", user.password)
+        const res = await userSignUp(user)
+        if (res) {
+            router.push("/signIn")
+        } else {
+            console.log("Incorrect Username or Password")
+        }
+        return res;
+    }
+
+    return (
+    <ScrollView style={{paddingBlockStart: unitSpaceHeight(30)}}>
+        <Text style={authStyles.titleText}>회원가입</Text>
+        <View style={authStyles.inputField}>
+            <View>`
+                <Text style={authStyles.subText}>아이디</Text>
+                <TextInput 
+                style={authStyles.textInput} 
+                secureTextEntry={true} 
+                placeholder="아이디" 
+                value={user.password} 
+                onChangeText={(pwd) => {setUser({...user, password: pwd})}}
+                autoCorrect={false}
+                autoCapitalize="none"
+                />`
+            </View>
+            <View>
+                <Text style={authStyles.subText}>이메일</Text>
+                <TextInput
+                style={authStyles.textInput} 
+                placeholder="이메일" value={user.email} 
+                onChangeText={(mail) => setUser({...user, email:mail})}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                />
+            </View>
+            <View>`
+                <Text style={authStyles.subText}>비밀번호</Text>
+                <TextInput 
+                style={authStyles.textInput} 
+                secureTextEntry={true} 
+                placeholder="비밀번호" 
+                value={user.password} 
+                onChangeText={(pwd) => {setUser({...user, password: pwd})}}
+                autoCorrect={false}
+                autoCapitalize="none"
+                />`
+            </View>
+        </View>
+        <View style={{alignItems: "center"}}>
+            <TouchableOpacity style={authStyles.button} onPress={login}>
+                <Text style={authStyles.buttonText}>로그인</Text>
+            </TouchableOpacity>
+            <Link href={"/signIn"} asChild>
+                <TouchableOpacity>
+                    <Text style={authStyles.goto}>로그인 하러 가기</Text>
+                </TouchableOpacity>
+            </Link>
+        </View>
+    </ScrollView>
+)}
