@@ -55,3 +55,27 @@ export const authStyles = StyleSheet.create({
         textDecorationLine: "underline"
     }
 })
+
+export const cardStyles = StyleSheet.create({
+    style: {
+        padding: unitSpaceHeight(3),
+        paddingInlineStart: unitSpaceWidth(10),
+        marginInline: unitSpaceHeight(6),
+        marginBlock: unitSpaceHeight(2),
+        borderCurve: 'circular',
+        borderRadius: unitSpaceHeight(2),
+    },
+    titleText: {
+        fontSize: unitSpaceHeight(6),
+        color: "#afafaf"
+    }
+})
+
+export const pageStyles = StyleSheet.create({
+    titleText: {
+        fontSize: unitSpaceHeight(10),
+        marginBlockStart: unitSpaceHeight(10),
+        marginInlineStart: unitSpaceWidth(20),
+        marginBlockEnd: unitSpaceHeight(10)
+    }
+})
