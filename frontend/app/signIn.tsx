@@ -35,7 +35,7 @@ export default function SignIn() {
                 autoCorrect={false}
                 />
             </View>
-            <View>`
+            <View>
                 <Text style={authStyles.subText}>비밀번호</Text>
                 <TextInput 
                 style={authStyles.textInput} 
@@ -45,7 +45,7 @@ export default function SignIn() {
                 onChangeText={(pwd) => {setUser({...user, password: pwd})}}
                 autoCorrect={false}
                 autoCapitalize="none"
-                />`
+                />
             </View>
         </View>
         <View style={{alignItems: "center"}}>

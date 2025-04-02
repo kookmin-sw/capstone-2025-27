@@ -1,3 +1,4 @@
+import axios from "axios"
 
 declare global {
     interface USER {
@@ -53,11 +54,22 @@ export function getUserRoadmap(user : USER) : ROADMAP {
     return roadmap
 }
 
-export function userSignIn(user : USER) : boolean {
-    // check user info in database
-    return false // success true, fail false
+export async function userSignIn(user : USER) : Promise<boolean> {
+    try {
+        const response = await axios.get(`/login/${user.email}`);
+        console.log(response.data);
+        return true
+    } catch (error) {
+        console.log("Error Signing In: ", error);
+        return false
+    }
 }
-export function userSignUp(user : USER) : boolean {
-    // create new user with user credentials
-    return false // success true, fail false
+export async function userSignUp(user : USER) : Promise<boolean> {
+    try {
+        const response = await axios.post(`/signup/${user}`)
+        return true
+    } catch (error) {
+        console.log("Error Signing Up: ", error)
+        return false
+    }
 }
