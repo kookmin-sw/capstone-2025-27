@@ -1,4 +1,18 @@
 
+//STEP:
+// startDate : DATE
+// endDate : DATE
+// dailies: list<DAILY>
+
+// DAILY:
+// date : DATE
+// todos: list<TODO>
+
+// TODO:
+// todo: string
+// accomplished : boolean
+
+
 declare global {
     interface USER {
         email: string,
