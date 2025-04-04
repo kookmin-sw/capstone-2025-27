@@ -4,21 +4,27 @@ declare global {
         email: string,
         username: string,
         password: string,
-        roadmapId: number,
     }
     interface TODO {
         date: Date,
-        todos: Array<string>
+        content: string,
+        accomplished: boolean
+    }
+    interface DAILY {
+        date: Date,
+        todos: Array<TODO>
     }
     interface STEP {
         description: string,
         startPeriod: Date,
         endPeriod: Date,
-        dailyTodos: Array<TODO>
+        dailies: Array<DAILY>
     }
     interface ROADMAP {
         steps: Array<STEP>,
-        id: number
+        id: number,
+        startDate: Date,
+        endDate: Date,
     }
 }
 
@@ -26,26 +32,27 @@ export const defaultUser : USER = {
     email: "",
     username: "",
     password: "",
-    roadmapId: 0,
 }
-
-const todo1 : TODO = {
+const exTodo1 : TODO = {
     date: new Date(),
-    todos: [
-        "what are <header> and <body> tags", 
-        "what are <href /> and <stylesheet> tags",
-        "try making an html file"
-    ]
+    content: "todo example 1",
+    accomplished: false
+}
+const exDaily1 : DAILY = {
+    date: new Date(),
+    todos: [exTodo1, exTodo1, exTodo1, exTodo1, exTodo1]
 }
 const step1 : STEP = {
     description: "Learn HTML basics",
     startPeriod: new Date(),
     endPeriod: new Date(),
-    dailyTodos: [todo1]
+    dailies: [exDaily1, exDaily1, exDaily1, exDaily1, exDaily1]
 }
 const roadmap : ROADMAP = {
-    steps: [step1],
-    id: 1
+    steps: [step1, step1, step1],
+    id: 1,
+    startDate: new Date(),
+    endDate: new Date()
 }
 
 export function getUserRoadmap(user : USER) : ROADMAP {
