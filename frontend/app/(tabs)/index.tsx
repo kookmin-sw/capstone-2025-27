@@ -1,10 +1,5 @@
 import { Image, StyleSheet, Platform, Text, ScrollView, SafeAreaView } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { CardView } from '@/components/CardView';
 import { cardStyles, pageStyles } from '@/components/styles';
 import Todos from '@/components/homepage/todos';
 import Progress from '@/components/homepage/progress';
