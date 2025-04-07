@@ -24,7 +24,7 @@ export default function SignUp() {
     <ScrollView style={{paddingBlockStart: unitSpaceHeight(30)}}>
         <Text style={authStyles.titleText}>회원가입</Text>
         <View style={authStyles.inputField}>
-            <View>`
+            <View>
                 <Text style={authStyles.subText}>아이디</Text>
                 <TextInput 
                 style={authStyles.textInput} 
@@ -34,7 +34,7 @@ export default function SignUp() {
                 onChangeText={(pwd) => {setUser({...user, password: pwd})}}
                 autoCorrect={false}
                 autoCapitalize="none"
-                />`
+                />
             </View>
             <View>
                 <Text style={authStyles.subText}>이메일</Text>
@@ -47,7 +47,7 @@ export default function SignUp() {
                 autoCorrect={false}
                 />
             </View>
-            <View>`
+            <View>
                 <Text style={authStyles.subText}>비밀번호</Text>
                 <TextInput 
                 style={authStyles.textInput} 
@@ -57,7 +57,7 @@ export default function SignUp() {
                 onChangeText={(pwd) => {setUser({...user, password: pwd})}}
                 autoCorrect={false}
                 autoCapitalize="none"
-                />`
+                />
             </View>
         </View>
         <View style={{alignItems: "center"}}>
