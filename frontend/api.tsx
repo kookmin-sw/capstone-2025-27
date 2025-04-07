@@ -46,7 +46,7 @@ const exTodo2 : TODO = {
     accomplished: false
 }
 const exDaily1 : DAILY = {
-    date: new Date(),
+    date: new Date(2025, 3, 1),
     todos: [exTodo1, exTodo2, exTodo1, exTodo2, exTodo1],
     id: 1,
     color: "#ababab"
