@@ -1,28 +1,51 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.LoginRequest;
+import com.example.backend.dto.RegisterRequest;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
-    public User registerUser(String username, String email, String password){
-        if(userRepository.findByUsername(username).isPresent()){
-            throw new RuntimeException("이미 존재하는 username입니다.");
+    public User registerUser(RegisterRequest request){
+        if(userRepository.findByUsername(request.getUsername()).isPresent()){
+            throw new IllegalArgumentException("이미 존재하는 username입니다.");
+        }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 email입니다.");
         }
         User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);
+    }
+
+    public String login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(), request.getPassword()
+                )
+        );
+
+        return jwtUtil.generateToken(request.getUsername());
     }
 }
