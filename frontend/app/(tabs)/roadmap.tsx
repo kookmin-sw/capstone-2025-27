@@ -1,10 +1,10 @@
 import { defaultUser, getUserRoadmap } from "@/api"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useEffect, useState } from "react"
-import { ScrollView, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import StepCard from "@/components/StepCard"
 import { CardView } from "@/components/CardView"
-import { pageStyles } from "@/components/styles"
+import { pageStyles, unitSpaceHeight } from "@/components/styles"
 
 export default function RoadMap() {
     async function userId() {
@@ -30,6 +30,12 @@ export default function RoadMap() {
             <StepCard step={step} />
         </View>
         ))}
+        <View style={styles.viewStyles}></View>
     </ScrollView>
     )
 }
+const styles = StyleSheet.create({
+    viewStyles: {
+        height: unitSpaceHeight(10)
+    }
+})

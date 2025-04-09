@@ -51,12 +51,12 @@ export const defaultUser : USER = {
 }
 const exTodo1 : TODO = {
     date: new Date(),
-    content: "first todo example",
+    content: "할일 1",
     accomplished: false
 }
 const exTodo2 : TODO = {
     date: new Date(),
-    content: "second todo example 1",
+    content: "할일 2",
     accomplished: false
 }
 const exDaily1 : DAILY = {
@@ -72,13 +72,13 @@ const exDaily2 : DAILY = {
     color: "#ababab"
 }
 const step1 : STEP = {
-    description: "Learn HTML basics",
+    description: "HTML 기초 배우기",
     startPeriod: new Date(),
     endPeriod: new Date(),
     dailies: [exDaily1, exDaily2, exDaily1, exDaily2, exDaily1]
 }
 const step2 : STEP = {
-    description: "Learn JAVASCRIPT basics",
+    description: "JAVASCRIPT 기초 배우기",
     startPeriod: new Date(),
     endPeriod: new Date(),
     dailies: [exDaily1, exDaily1, exDaily2, exDaily1, exDaily2]
@@ -102,4 +102,13 @@ export function userSignIn(user : USER) : boolean {
 export function userSignUp(user : USER) : boolean {
     // create new user with user credentials
     return false // success true, fail false
+}
+
+export function toKoreanDate(date : Date) : string {
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long',
+    })
 }

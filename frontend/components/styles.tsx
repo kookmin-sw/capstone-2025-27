@@ -2,6 +2,7 @@ import { StyleSheet, Dimensions } from "react-native"
 
 export const primaryColor = "#FFFFFF"
 export const secondaryColor = "#58C6E7"
+export const tertiaryColor = "#9ce8ff"
 export const fontfamily = "monospace"
 
 const {height, width} = Dimensions.get("screen")
@@ -74,8 +75,83 @@ export const cardStyles = StyleSheet.create({
 export const pageStyles = StyleSheet.create({
     titleText: {
         fontSize: unitSpaceHeight(10),
-        marginBlockStart: unitSpaceHeight(10),
+        marginBlockStart: unitSpaceHeight(20),
         marginInlineStart: unitSpaceWidth(20),
-        marginBlockEnd: unitSpaceHeight(10)
+        marginBlockEnd: unitSpaceHeight(5)
+    }
+})
+
+export const stepCardStyles = StyleSheet.create({
+    titleView: {
+        marginBlockStart: unitSpaceHeight(10),
+        marginInline: unitSpaceWidth(15),
+        borderWidth: unitSpaceWidth(1),
+        padding: unitSpaceHeight(3),
+        paddingBlock: unitSpaceHeight(5),
+        borderCurve: "circular",
+        borderRadius: unitSpaceHeight(5),
+        borderColor: primaryColor,
+        overflow: "hidden",
+        backgroundColor: secondaryColor
+    },
+    titleText: {
+        fontSize: unitSpaceHeight(5),
+        color: primaryColor
+    }
+})
+
+const timelineColor = secondaryColor
+export const timelineStyles = StyleSheet.create({
+    view: {
+        display: "flex",
+        flexDirection: "row",
+        paddingBlockEnd: unitSpaceHeight(3),
+        overflow: "hidden",
+        marginInline: unitSpaceWidth(10)
+    },
+    line: {
+        backgroundColor: timelineColor,
+        marginInlineStart: unitSpaceWidth(15),
+        width: unitSpaceWidth(2),
+        borderCurve: "circular",
+        borderRadius: unitSpaceHeight(2),
+    },
+    dotSection: {
+        justifyContent: "center",
+        position: "relative"
+    },
+    dot: {
+        width: unitSpaceWidth(5),
+        height: unitSpaceWidth(5),
+        backgroundColor: timelineColor,
+        borderCurve: "circular",
+        borderRadius: unitSpaceHeight(3),
+        position: "absolute",
+        right: unitSpaceHeight(-0.7)
+    },
+    dotAndLineView: {
+        display: "flex",
+        flexDirection: "row",
+    },
+    eventView: {
+        flex: 1,
+        paddingBlockEnd: unitSpaceHeight(3)
+    },
+    event: {
+        backgroundColor: tertiaryColor,
+        paddingBlock: unitSpaceHeight(2),
+        paddingInline: unitSpaceWidth(3),
+        marginBlock: unitSpaceHeight(2),
+        marginInlineStart: unitSpaceWidth(3),
+        marginInlineEnd: unitSpaceWidth(25),
+        borderCurve: "circular",
+        borderRadius: unitSpaceHeight(2),
+        flex: 1
+    },
+    stepPeriodText: {
+        fontWeight: "600",
+        marginInlineStart: unitSpaceWidth(8),
+        marginBlock: unitSpaceHeight(1),
+        fontSize: unitSpaceWidth(8)
     }
 })
