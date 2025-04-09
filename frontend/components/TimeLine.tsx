@@ -10,7 +10,8 @@ export default function TimeLine() {
 export function TimeLineDot() {
     return (
         <View style={timelineStyles.dotSection}>
-            <View style={timelineStyles.dot}></View>
+            <View style={timelineStyles.dot}>
+            </View>
         </View>
     )
 }
