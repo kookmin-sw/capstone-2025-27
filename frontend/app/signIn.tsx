@@ -17,7 +17,6 @@ export default function SignIn() {
         } else {
             console.log("Incorrect Username or Password")
         }
-        router.push("/(tabs)") //for test purposes (to develop home ui)
         return res;
     }
 

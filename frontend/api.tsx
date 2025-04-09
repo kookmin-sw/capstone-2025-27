@@ -4,6 +4,8 @@
 // endDate : DATE
 // dailies: list<DAILY>
 
+import axios from "axios"
+
 // DAILY:
 // date : DATE
 // todos: list<TODO>
@@ -96,11 +98,21 @@ export function getUserRoadmap(userId : number) : ROADMAP {
 }
 
 export function userSignIn(user : USER) : boolean {
-    // check user info in database
+    try {
+        fetch("https://auth/login")
+    } catch (error) {
+        console.log("Error while login : ", error)
+    }
     return false // success true, fail false
 }
-export function userSignUp(user : USER) : boolean {
-    // create new user with user credentials
+export async function userSignUp(user : USER) : Promise<boolean> {
+    try {
+        axios.post('https://auth/signup', {user})
+        .then(response => console.log(response))
+        return true;
+    } catch (error) {
+        console.log("Error while signUp : ", error)
+    }
     return false // success true, fail false
 }
 
