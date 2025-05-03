@@ -1,27 +1,31 @@
 import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { authStyles, unitSpaceHeight, unitSpaceWidth } from "@/components/styles";
+import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import { defaultUser, userSignIn } from "../api"
+import { userSignIn, exUser } from "../api"
+import { useUser } from "@/components/contexts/UserContext";
 
 export default function SignIn() {
 
-    const [user, setUser] = useState<USER>(defaultUser);
+    const [user, setUser] = useState<USER>(exUser);
     const router = useRouter()
+    const { saveUser } = useUser();
 
     const login = async () : Promise<boolean> => {
         console.log(user.email, " --- ", user.password)
         const res = await userSignIn(user)
         if (res) {
+            saveUser(user)
             router.push("/(tabs)")
         } else {
             console.log("Incorrect Username or Password")
         }
+        router.push("/(tabs)")
         return res;
     }
 
     return (
-    <ScrollView style={{paddingBlockStart: unitSpaceHeight(30)}}>
+    <ScrollView style={{paddingBlockStart: unitPixel(30)}}>
         <Text style={authStyles.titleText}>로그인</Text>
         <View style={authStyles.inputField}>
             <View>

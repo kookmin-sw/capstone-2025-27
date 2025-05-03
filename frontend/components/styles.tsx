@@ -6,7 +6,7 @@ export const tertiaryColor = "#9ce8ff"
 export const fontfamily = "monospace"
 
 const {height, width} = Dimensions.get("screen")
-export function unitSpaceHeight(val : number) {
+export function unitPixel(val : number) {
     return height/200 * val
 }
 export function unitSpaceWidth(val : number) {
@@ -16,16 +16,16 @@ export function unitSpaceWidth(val : number) {
 export const authStyles = StyleSheet.create({
     titleText: {
         color: secondaryColor,
-        fontSize: unitSpaceHeight(9),
+        fontSize: unitPixel(9),
         fontFamily: fontfamily,
         textAlign: "center"
     },
     subText: {
         color: secondaryColor,
-        fontSize: unitSpaceHeight(4.5),
+        fontSize: unitPixel(4.5),
         fontFamily: fontfamily,
         textAlign: "left",
-        marginBlockEnd: unitSpaceHeight(1)
+        marginBlockEnd: unitPixel(1)
     },
     textInput: {
         borderWidth: 1,
@@ -34,17 +34,17 @@ export const authStyles = StyleSheet.create({
         borderRadius: 10
     },
     inputField: {
-        marginBlockStart: unitSpaceHeight(10),
+        marginBlockStart: unitPixel(10),
         justifyContent: "space-around",
         padding: unitSpaceWidth(30),
-        height: unitSpaceHeight(90),
+        height: unitPixel(90),
     },
     button: {
         backgroundColor: secondaryColor,
         width: unitSpaceWidth(60),
         borderCurve: "circular",
-        borderRadius: unitSpaceHeight(2),
-        marginBlockEnd: unitSpaceHeight(10)
+        borderRadius: unitPixel(2),
+        marginBlockEnd: unitPixel(10)
     },
     buttonText: {
         textAlign: "center",
@@ -59,43 +59,43 @@ export const authStyles = StyleSheet.create({
 
 export const cardStyles = StyleSheet.create({
     style: {
-        padding: unitSpaceHeight(3),
+        padding: unitPixel(3),
         paddingInlineStart: unitSpaceWidth(10),
-        marginInline: unitSpaceHeight(6),
-        marginBlock: unitSpaceHeight(2),
+        marginInline: unitPixel(6),
+        marginBlock: unitPixel(2),
         borderCurve: 'circular',
-        borderRadius: unitSpaceHeight(2),
+        borderRadius: unitPixel(2),
     },
     titleText: {
-        fontSize: unitSpaceHeight(6),
+        fontSize: unitPixel(6),
         color: "#afafaf"
     }
 })
 
 export const pageStyles = StyleSheet.create({
     titleText: {
-        fontSize: unitSpaceHeight(10),
-        marginBlockStart: unitSpaceHeight(20),
+        fontSize: unitPixel(10),
+        marginBlockStart: unitPixel(20),
         marginInlineStart: unitSpaceWidth(20),
-        marginBlockEnd: unitSpaceHeight(5)
+        marginBlockEnd: unitPixel(5)
     }
 })
 
 export const stepCardStyles = StyleSheet.create({
     titleView: {
-        marginBlockStart: unitSpaceHeight(10),
+        marginBlockStart: unitPixel(10),
         marginInline: unitSpaceWidth(15),
         borderWidth: unitSpaceWidth(1),
-        padding: unitSpaceHeight(3),
-        paddingBlock: unitSpaceHeight(5),
+        padding: unitPixel(3),
+        paddingBlock: unitPixel(5),
         borderCurve: "circular",
-        borderRadius: unitSpaceHeight(5),
+        borderRadius: unitPixel(5),
         borderColor: primaryColor,
         overflow: "hidden",
         backgroundColor: secondaryColor
     },
     titleText: {
-        fontSize: unitSpaceHeight(5),
+        fontSize: unitPixel(5),
         color: primaryColor
     }
 })
@@ -105,7 +105,7 @@ export const timelineStyles = StyleSheet.create({
     view: {
         display: "flex",
         flexDirection: "row",
-        paddingBlockEnd: unitSpaceHeight(3),
+        paddingBlockEnd: unitPixel(3),
         overflow: "hidden",
         marginInline: unitSpaceWidth(10)
     },
@@ -114,7 +114,7 @@ export const timelineStyles = StyleSheet.create({
         marginInlineStart: unitSpaceWidth(15),
         width: unitSpaceWidth(2),
         borderCurve: "circular",
-        borderRadius: unitSpaceHeight(2),
+        borderRadius: unitPixel(2),
     },
     dotSection: {
         justifyContent: "center",
@@ -125,9 +125,9 @@ export const timelineStyles = StyleSheet.create({
         height: unitSpaceWidth(5),
         backgroundColor: timelineColor,
         borderCurve: "circular",
-        borderRadius: unitSpaceHeight(3),
+        borderRadius: unitPixel(3),
         position: "absolute",
-        right: unitSpaceHeight(-0.7)
+        right: unitPixel(-0.7)
     },
     dotAndLineView: {
         display: "flex",
@@ -135,23 +135,23 @@ export const timelineStyles = StyleSheet.create({
     },
     eventView: {
         flex: 1,
-        paddingBlockEnd: unitSpaceHeight(3)
+        paddingBlockEnd: unitPixel(3)
     },
     event: {
         backgroundColor: tertiaryColor,
-        paddingBlock: unitSpaceHeight(2),
+        paddingBlock: unitPixel(2),
         paddingInline: unitSpaceWidth(3),
-        marginBlock: unitSpaceHeight(2),
+        marginBlock: unitPixel(2),
         marginInlineStart: unitSpaceWidth(3),
         marginInlineEnd: unitSpaceWidth(25),
         borderCurve: "circular",
-        borderRadius: unitSpaceHeight(2),
+        borderRadius: unitPixel(2),
         flex: 1
     },
     stepPeriodText: {
         fontWeight: "600",
         marginInlineStart: unitSpaceWidth(8),
-        marginBlock: unitSpaceHeight(1),
+        marginBlock: unitPixel(1),
         fontSize: unitSpaceWidth(8)
     }
 })

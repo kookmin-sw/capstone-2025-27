@@ -1,12 +1,12 @@
 import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { authStyles, unitSpaceHeight, unitSpaceWidth } from "@/components/styles";
+import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import { defaultUser, userSignUp } from "../api"
+import { userSignUp, exUser } from "../api"
 
 export default function SignUp() {
 
-    const [user, setUser] = useState<USER>(defaultUser);
+    const [user, setUser] = useState<USER>(exUser);
     const router = useRouter()
 
     const login = async () : Promise<boolean> => {
@@ -21,7 +21,7 @@ export default function SignUp() {
     }
 
     return (
-    <ScrollView style={{paddingBlockStart: unitSpaceHeight(30)}}>
+    <ScrollView style={{paddingBlockStart: unitPixel(30)}}>
         <Text style={authStyles.titleText}>회원가입</Text>
         <View style={authStyles.inputField}>
             <View>

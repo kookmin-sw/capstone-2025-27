@@ -11,11 +11,16 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+  const mainHeaderStyle = {
+    fontSize: 30,
+    fontWeight: 'bold'
+  }
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+        headerShown: true,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -26,25 +31,34 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="roadmap"
-        options={{
-          title: '로드맵',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.circle" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="index"
         options={{
-          title: '학습',
+          title: '캐쉬Q&A',
+          headerTitleStyle: mainHeaderStyle,
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="mypage"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: '마이페이지',
+          headerTitleStyle: mainHeaderStyle,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
+      />
+      <Tabs.Screen
+        name="question"
+        options={{
+          title: 'Q',
+          href: null,
+        }} 
+      />
+      <Tabs.Screen
+        name="postquestion"
+        options={{
+          title: '질문하기',
+          href: null,
+        }} 
       />
     </Tabs>
   );

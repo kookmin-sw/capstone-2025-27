@@ -1,18 +1,72 @@
-import { Image, StyleSheet, Platform, Text, ScrollView, SafeAreaView } from 'react-native';
+import { useEffect, useState } from "react";
+import { Text, View, FlatList, StyleSheet, Pressable } from "react-native";
+import { getQuestions } from "@/api";
+import QuestionCard from "../../components/QuestionCard";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { secondaryColor } from "@/components/styles";
+import { useUser } from "@/components/contexts/UserContext";
+import { moderateScale, responsiveStyleSheet } from "@/components/responsive";
 
-import { cardStyles, pageStyles } from '@/components/styles';
-import { CardView } from '@/components/CardView';
+export default function QuestionPage() {
+  const [questions, setQuestions] = useState<Array<QUESTION>>([]);
+  const router = useRouter();
 
-export default function HomeScreen() {
+  const { user } = useUser()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const allQuestions = await getQuestions();
+      setQuestions(allQuestions);
+    };
+    fetchData();
+  }, []);
+
   return (
-    <ScrollView>
-      <Text style={pageStyles.titleText}>학습페이지</Text>
-      <CardView color='#ffffff'>
-        <Text style={cardStyles.titleText}>PROGRESS</Text>
-      </CardView>
-      <CardView color='#ffffff'>
-        <Text style={cardStyles.titleText}>TODO</Text>
-      </CardView>
-    </ScrollView>
+    <View style={styles.wrapper}>
+      <FlatList
+        data={questions}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <QuestionCard
+            question={item}
+            onPress={() => router.push(`/question/${item.id}`)}
+          />
+        )}
+        contentContainerStyle={styles.container}
+      />
+      <Pressable
+        style={styles.fab}
+        onPress={() => router.push("/postquestion/postpage")}
+      >
+        <Ionicons name="add" size={28} color="#fff" />
+      </Pressable>
+    </View>
   );
 }
+
+const styles = responsiveStyleSheet({
+  wrapper: {
+    flex: 1,
+  },
+  container: {
+    padding: 16,
+    paddingBottom: 80,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 30,
+    backgroundColor: secondaryColor,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 6,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+  },
+});
