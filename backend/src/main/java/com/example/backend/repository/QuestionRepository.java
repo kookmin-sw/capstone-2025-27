@@ -1,0 +1,17 @@
+package com.example.backend.repository;
+
+import com.example.backend.dto.QuestionResponseDto;
+import com.example.backend.entity.Question;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public interface QuestionRepository extends MongoRepository<Question, String> {
+    @Query("{ 'title': { $regex: ?0, $options: 'i' } }")
+    List<Question> findByTitleRegexIgnoreCase(String keyword);
+
+    List<Question> findByCreateTimeBeforeOrderByCreateTimeDesc(LocalDateTime cursor, Pageable pageable);
+}
