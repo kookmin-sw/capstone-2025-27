@@ -13,8 +13,12 @@ public class Reply {
     private String id;
     private String questionId;
     private String authorId;
-    private String parentReplyId;
-    private int depth;
+//    대댓글 기능 생길시 사용
+//    private String parentReplyId;
+//    private int depth;
     private String content;
     private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
+    private boolean edited;
+    private int likeCount;
 }

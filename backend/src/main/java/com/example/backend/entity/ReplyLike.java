@@ -7,14 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "users")
+@Document(collection = "replyLikes")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class ReplyLike {
     @Id
     private String id;
-    private String email;
-    private String username;
-    private String password;
-    private Long point;
+    private String replyId;
+    private String userId;
 }
