@@ -23,8 +23,10 @@ public class Question {
     private String content;
     private int reward;
     private LocalDateTime createTime;
+    private LocalDateTime modifiedTime;
     private LocalDateTime deadline;
     private String authorId;
     private String selectedAnswerId;
     private boolean autoSelected;
+    private boolean edited;
 }

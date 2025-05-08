@@ -3,9 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.QuestionRequestDto;
 import com.example.backend.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -42,15 +39,19 @@ public class QuestionController {
 
     @Operation(summary = "질문 수정", description = "질문을 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateQuestion(@PathVariable String id, @RequestBody QuestionRequestDto dto, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
-        questionService.updateQuestion(id, dto, userDetails.getUsername());
+    public ResponseEntity<?> updateQuestion(@PathVariable String id,
+                                            @RequestBody QuestionRequestDto dto,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        questionService.updateQuestion(id, dto, userId);
         return ResponseEntity.ok(Map.of("message", "질문이 수정되었습니다."));
     }
 
     @Operation(summary = "질문 삭제", description = "질문을 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable String id, @AuthenticationPrincipal UserDetails userDetails) throws AccessDeniedException {
-        questionService.deleteQuestion(id, userDetails.getUsername());
+    public ResponseEntity<?> deleteQuestion(@PathVariable String id, @AuthenticationPrincipal UserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        questionService.deleteQuestion(id, userId);
         return ResponseEntity.ok(Map.of("message", "질문이 삭제되었습니다."));
     }
 
