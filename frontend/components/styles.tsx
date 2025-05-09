@@ -1,76 +1,65 @@
 import { StyleSheet, Dimensions } from "react-native"
+import { responsiveStyleSheet } from "./responsive"
 
-export const primaryColor = "#FFFFFF"
-export const secondaryColor = "#58C6E7"
-export const tertiaryColor = "#9ce8ff"
+export const bgColor = "#f9f7f1"
+export const cardColor = "#ffffff"
+export const primaryColor = "#c9a348"
+export const secondaryColor = "#02066f"
+export const tertiaryColor = "##6e6e6e"
 export const fontfamily = "monospace"
 
 const {height, width} = Dimensions.get("screen")
 export function unitPixel(val : number) {
-    return height/200 * val
+  return height/200 * val
 }
 export function unitSpaceWidth(val : number) {
-    return width/200 * val
+  return width/200 * val
 }
 
-export const authStyles = StyleSheet.create({
-    titleText: {
-        color: secondaryColor,
-        fontSize: unitPixel(9),
-        fontFamily: fontfamily,
-        textAlign: "center"
-    },
-    subText: {
-        color: secondaryColor,
-        fontSize: unitPixel(4.5),
-        fontFamily: fontfamily,
-        textAlign: "left",
-        marginBlockEnd: unitPixel(1)
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: "#000000",
-        borderCurve: "circular",
-        borderRadius: 10
-    },
-    inputField: {
-        marginBlockStart: unitPixel(10),
-        justifyContent: "space-around",
-        padding: unitSpaceWidth(30),
-        height: unitPixel(90),
-    },
-    button: {
-        backgroundColor: secondaryColor,
-        width: unitSpaceWidth(60),
-        borderCurve: "circular",
-        borderRadius: unitPixel(2),
-        marginBlockEnd: unitPixel(10)
-    },
-    buttonText: {
-        textAlign: "center",
-        color: primaryColor,
-        padding: unitSpaceWidth(5)
-    },
-    goto: {
-        color: secondaryColor,
-        textDecorationLine: "underline"
-    }
+export const authStyles = responsiveStyleSheet({
+  titleText: {
+    color: secondaryColor,
+    fontSize: 40,
+    fontFamily: fontfamily,
+    textAlign: "center"
+  },
+  subText: {
+    color: secondaryColor,
+    fontSize: 20,
+    fontFamily: fontfamily,
+    textAlign: "left",
+    marginBlockEnd: 5
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderCurve: "circular",
+    borderRadius: 10
+  },
+  inputField: {
+    marginBlockStart: 40,
+    justifyContent: "space-around",
+    padding: 45,
+    height: 350,
+  },
+  button: {
+    backgroundColor: primaryColor,
+    width: 130,
+    borderCurve: "circular",
+    borderRadius: 10,
+    marginBlockEnd: 40,
+  },
+  buttonText: {
+    textAlign: "center",
+    color: bgColor,
+    padding: unitSpaceWidth(5)
+  },
+  goto: {
+    color: secondaryColor,
+    textDecorationLine: "underline"
+  }
 })
 
-export const cardStyles = StyleSheet.create({
-    style: {
-        padding: unitPixel(3),
-        paddingInlineStart: unitSpaceWidth(10),
-        marginInline: unitPixel(6),
-        marginBlock: unitPixel(2),
-        borderCurve: 'circular',
-        borderRadius: unitPixel(2),
-    },
-    titleText: {
-        fontSize: unitPixel(6),
-        color: "#afafaf"
-    }
-})
 
 export const pageStyles = StyleSheet.create({
     titleText: {

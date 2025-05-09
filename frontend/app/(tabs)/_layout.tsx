@@ -7,6 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import AppIcon from '@/components/AppIcon';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,17 +34,19 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: '캐쉬Q&A',
+          title: 'CASHQ&A',
+          tabBarShowLabel: false,
           headerTitleStyle: mainHeaderStyle,
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: () => <AppIcon />,
         }}
       />
       <Tabs.Screen
         name="mypage"
         options={{
           title: '마이페이지',
+          tabBarShowLabel: false,
           headerTitleStyle: mainHeaderStyle,
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color } : any) => <IconSymbol size={28} name="person" color={color} />,
         }}
       />
       <Tabs.Screen

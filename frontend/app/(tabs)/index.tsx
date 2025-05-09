@@ -1,29 +1,46 @@
 import { useEffect, useState } from "react";
 import { Text, View, FlatList, StyleSheet, Pressable } from "react-native";
-import { getQuestions } from "@/api";
+import { getQuestions, getQuestionsByQueryCategory } from "@/api";
 import QuestionCard from "../../components/QuestionCard";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { secondaryColor } from "@/components/styles";
 import { useUser } from "@/components/contexts/UserContext";
-import { moderateScale, responsiveStyleSheet } from "@/components/responsive";
+import { responsiveStyleSheet } from "@/components/responsive";
+import SearchBar from "@/components/SearchBar";
 
 export default function QuestionPage() {
   const [questions, setQuestions] = useState<Array<QUESTION>>([]);
   const router = useRouter();
+  const [query, setQuery] = useState('')
+  const [category, setCategory] = useState('All')
+  const debouncedQuery = useDebounce(query, 300)
 
   const { user } = useUser()
 
   useEffect(() => {
     const fetchData = async () => {
       const allQuestions = await getQuestions();
+      console.log("change")
       setQuestions(allQuestions);
     };
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const shouldFetch = (debouncedQuery && debouncedQuery.length > 0) || category !== 'All';
+
+    if (!shouldFetch) return;
+    const fetchData = async () => {
+      const queryQuestions = await getQuestionsByQueryCategory(query, category)
+      setQuestions(queryQuestions);
+    }
+    fetchData()
+  }, [debouncedQuery, category])
+
   return (
     <View style={styles.wrapper}>
+      <SearchBar value={query} onChangeText={setQuery} selectedCategory={category} setSelectedCategory={setCategory} />
       <FlatList
         data={questions}
         keyExtractor={(item) => item.id}
@@ -70,3 +87,19 @@ const styles = responsiveStyleSheet({
     shadowRadius: 5,
   },
 });
+
+
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}

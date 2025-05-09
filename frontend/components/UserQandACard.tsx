@@ -1,6 +1,8 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useUser } from './contexts/UserContext';
+import { responsiveStyleSheet } from './responsive';
+import { bgColor, cardColor, primaryColor, secondaryColor, tertiaryColor } from './styles';
 
 
 export default function UserQandACard() {
@@ -13,7 +15,7 @@ export default function UserQandACard() {
       <View style={styles.buttonRow}>
         <Pressable
           style={styles.button}
-          onPress={() => router.push(`/mycontent/myquestions?user=${user?.id}`)}
+          onPress={() => router.push(`/(mycontent)/myquestions?user=${user?.id}`)}
         >
           <Text style={styles.emoji}>📋</Text>
           <Text style={styles.buttonText}>나의 질문 목록</Text>
@@ -21,7 +23,7 @@ export default function UserQandACard() {
 
         <Pressable
           style={styles.button}
-          onPress={() => router.push(`/mycontent/myreplies?user=${user?.id}`)}
+          onPress={() => router.push(`/(mycontent)/myreplies?user=${user?.id}`)}
         >
           <Text style={styles.emoji}>💬</Text>
           <Text style={styles.buttonText}>나의 답변 목록</Text>
@@ -31,9 +33,11 @@ export default function UserQandACard() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = responsiveStyleSheet({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: cardColor,
+    borderWidth: 1,
+    borderColor: secondaryColor,
     borderRadius: 12,
     padding: 16,
     marginTop: 20,
@@ -41,6 +45,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
+    elevation: 2
   },
   title: {
     fontSize: 16,
