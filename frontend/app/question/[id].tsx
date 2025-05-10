@@ -17,8 +17,11 @@ export default function QuestionDetailPage() {
   const { user } = useUser()
   const [isMyQuestion, setIsMyQuestion] = useState<boolean>(false)
 
-  const toggleSelect = (replyId : string) => {
+  const [selectedAuthorId, setSelectedAuthorId] = useState('')
+
+  const toggleSelect = (replyId : string, authorId : string) => {
     setSelectedId(replyId);
+    setSelectedAuthorId(authorId)
   };
 
   const chooseReply = (replyId : string) => {
@@ -74,10 +77,10 @@ export default function QuestionDetailPage() {
     }, [selectedId])
 
     return (
-      <Pressable onPress={() => toggleSelect(reply.id)} style={styles.checkboxWrapper}>
+      <Pressable onPress={() => toggleSelect(reply.id, reply.authorId)} style={styles.checkboxWrapper}>
         <Ionicons
         name={selected ? 'checkbox' : 'square-outline'}
-        size={32} // Slightly larger than default
+        size={32}
         color={primaryColor}
         />
       </Pressable>
@@ -88,7 +91,7 @@ export default function QuestionDetailPage() {
     if (selectedId == null || !isMyQuestion) return
     return (
       <Pressable onPress={() => chooseReply(selectedId)} style={styles.selectButton}>
-        <Text style={styles.selectButtonText}>Select Reply</Text>
+        <Text style={styles.selectButtonText}>{selectedAuthorId}에게 현상금 보상하기</Text>
       </Pressable>
     )
   }

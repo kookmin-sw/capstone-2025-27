@@ -15,7 +15,7 @@ const SelectCategory: React.FC<SelectCategoryProps> = ({
   value,
   onValueChange,
   items,
-  placeholder = 'Select an option...',
+  placeholder = '카테고리를 선택해 주세요',
 }) => {
   return (
     <View style={styles.container}>
@@ -40,7 +40,6 @@ export default SelectCategory;
 
 const styles = responsiveStyleSheet({
   container: {
-    marginBottom: 40
   },
   label: {
     fontSize: 14,

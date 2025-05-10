@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react"
 
 interface UserContextValue {
     user : USER | null,
-    saveUser : (user : USER) => void
+    saveUser : (user : USER | null) => void
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined)

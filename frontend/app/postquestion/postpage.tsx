@@ -67,6 +67,7 @@ export default function NewQuestionPage() {
           { label: 'IT', value: 'IT' },
         ]}
       />
+      <View style={styles.divider} />
       <Text style={styles.label}>제목</Text>
       <TextInput
         style={styles.input}
@@ -97,6 +98,7 @@ export default function NewQuestionPage() {
         placeholder="Enter a number"
         keyboardType="numeric"
       />
+      <View style={styles.divider} />
       <Text style={styles.label}>답변기한</Text>
       <DateInput date={question.deadline} onChange={(date) => setQuestion((prev) => ({...prev, deadline: date}))} />
       <Button color={secondaryColor} title="질문 등록" onPress={handleSubmit} />
@@ -128,11 +130,15 @@ const styles = responsiveStyleSheet({
     borderRadius: 6,
     padding: 12,
     fontSize: 16,
-    marginBottom: 40,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
     elevation: 1,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: secondaryColor,
+    marginVertical: 40
   },
 });
