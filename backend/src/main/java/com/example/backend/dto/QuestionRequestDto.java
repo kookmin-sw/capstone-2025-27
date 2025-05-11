@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 public class QuestionRequestDto {
     private String title;
     private String content;
-    private int reward;
+    private Long reward;
     private LocalDateTime deadline;
 }

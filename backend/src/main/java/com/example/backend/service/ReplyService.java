@@ -2,9 +2,9 @@ package com.example.backend.service;
 
 import com.example.backend.dto.ReplyRequestDto;
 import com.example.backend.dto.ReplyResponseDto;
-import com.example.backend.entity.Question;
-import com.example.backend.entity.Reply;
-import com.example.backend.entity.ReplyLike;
+import com.example.backend.domain.Question;
+import com.example.backend.domain.Reply;
+import com.example.backend.domain.ReplyLike;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;

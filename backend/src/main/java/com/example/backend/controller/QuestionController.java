@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.QuestionRequestDto;
+import com.example.backend.dto.RewardRequestDto;
+import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,9 +27,8 @@ public class QuestionController {
 
     @Operation(summary = "질문글 생성", description = "새로운 질문을 생성")
     @PostMapping
-    public ResponseEntity<?> createQuestion(@RequestBody QuestionRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        String userId = userDetails.getUsername();
-        String questionId = questionService.createQuestion(requestDto, userId);
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionRequestDto requestDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String questionId = questionService.createQuestion(requestDto, userDetails.getUserId());
         return ResponseEntity.ok(Map.of("id", questionId, "message", "질문이 등록되었습니다"));
     }
 
@@ -41,18 +42,22 @@ public class QuestionController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateQuestion(@PathVariable String id,
                                             @RequestBody QuestionRequestDto dto,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
-        String userId = userDetails.getUsername();
-        questionService.updateQuestion(id, dto, userId);
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        questionService.updateQuestion(id, dto, userDetails.getUserId());
         return ResponseEntity.ok(Map.of("message", "질문이 수정되었습니다."));
     }
 
     @Operation(summary = "질문 삭제", description = "질문을 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable String id, @AuthenticationPrincipal UserDetails userDetails) {
-        String userId = userDetails.getUsername();
-        questionService.deleteQuestion(id, userId);
+    public ResponseEntity<?> deleteQuestion(@PathVariable String id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        questionService.deleteQuestion(id, userDetails.getUserId());
         return ResponseEntity.ok(Map.of("message", "질문이 삭제되었습니다."));
+    }
+
+    @PostMapping("/answers/reward")
+    public ResponseEntity<?> rewardReply(@RequestBody RewardRequestDto dto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        questionService.rewardReply(dto, userDetails.getUserId());
+        return ResponseEntity.ok(Map.of("message", "보상이 완료되었습니다."));
     }
 
     @Operation(summary = "제목으로 질문 검색", description = "정규식(regex)를 이용해 제목으로 질문 검색 *추후에 text-index 로 마이그레이션 필요")

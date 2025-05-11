@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 @Tag(name = "Auth", description = "로그인 관련 API")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Operation(summary = "로그인", description = "입력받은 username, password 로 로그인을 진행하고 정보가 틀리다면 로그인 실패 메시지 전송")
     @PostMapping("/login")

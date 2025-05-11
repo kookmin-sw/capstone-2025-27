@@ -1,7 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.dto.QuestionResponseDto;
-import com.example.backend.entity.Question;
+import com.example.backend.domain.Question;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

@@ -1,6 +1,6 @@
 package com.example.backend.dto;
 
-import com.example.backend.entity.Question;
+import com.example.backend.domain.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ public class QuestionResponseDto {
     private String id;
     private String title;
     private String content;
-    private int reward;
+    private Long reward;
     private LocalDateTime deadline;
     private String authorId;
     private String selectedAnswerId;

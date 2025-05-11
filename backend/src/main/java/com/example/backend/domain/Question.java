@@ -1,4 +1,4 @@
-package com.example.backend.entity;
+package com.example.backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Document(collection = "questions")
@@ -21,7 +19,7 @@ public class Question {
     private String id;
     private String title;
     private String content;
-    private int reward;
+    private Long reward;
     private LocalDateTime createTime;
     private LocalDateTime modifiedTime;
     private LocalDateTime deadline;

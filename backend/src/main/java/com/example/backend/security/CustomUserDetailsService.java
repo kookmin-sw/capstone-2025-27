@@ -1,6 +1,6 @@
-package com.example.backend.service;
+package com.example.backend.security;
 
-import com.example.backend.entity.User;
+import com.example.backend.domain.User;
 import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,10 +18,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        return org.springframework.security.core.userdetails.User.builder()
+        return CustomUserDetails.builder()
+                .userId(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles("USER")
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.backend.entity;
+package com.example.backend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "replyLikes")
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "replyLikes")
 public class ReplyLike {
     @Id
     private String id;

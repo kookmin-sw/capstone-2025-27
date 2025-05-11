@@ -2,16 +2,21 @@ package com.example.backend.service;
 
 import com.example.backend.dto.QuestionRequestDto;
 import com.example.backend.dto.QuestionResponseDto;
-import com.example.backend.entity.Question;
-import com.example.backend.entity.Reply;
+import com.example.backend.domain.Question;
+import com.example.backend.domain.Reply;
+import com.example.backend.dto.RewardRequestDto;
+import com.example.backend.exception.AlreadyRewardedException;
+import com.example.backend.exception.CannotDeleteReplyException;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,10 +28,20 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
+    private final PointService pointService;
+
 
     // 질문 생성
+    @Transactional
     public String createQuestion(QuestionRequestDto dto, String userId) {
+
+        String questionId = new ObjectId().toHexString();
+
+        // 사용자 point reward 만큼 삭감
+        pointService.spendPoint(userId, dto.getReward(), questionId);
+
         Question question = Question.builder()
+                .id(questionId)
                 .authorId(userId)
                 .title(dto.getTitle())
                 .content(dto.getContent())
@@ -38,6 +53,7 @@ public class QuestionService {
                 .autoSelected(false)
                 .edited(false)
                 .build();
+
         return questionRepository.save(question).getId();
     }
 
@@ -47,24 +63,45 @@ public class QuestionService {
     }
 
     // 질문 update
+    @Transactional
     public void updateQuestion(String questionId, QuestionRequestDto dto, String userId)  {
         Question question = questionRepository.findById(questionId).orElseThrow();
         if (!question.getAuthorId().equals(userId)) throw new AccessDeniedException("권한 없음");
+
+        Long originalReward = question.getReward();
+        Long newReward = dto.getReward();
+
+        // 리워드 수정시 포인트 재분배
+        if (newReward > originalReward) {
+            pointService.spendPoint(userId, newReward - originalReward, questionId);
+        } else if (newReward < originalReward) {
+            throw new IllegalArgumentException("reward 를 이전 reward 보다 낮게 설정할 수 없음");
+        }
+
         question.setTitle(dto.getTitle());
         question.setContent(dto.getContent());
         question.setReward(dto.getReward());
         question.setDeadline(dto.getDeadline());
         question.setModifiedTime(LocalDateTime.now());
         question.setEdited(true);
+
         questionRepository.save(question);
     }
 
-    // 질문 삭제 (근데 질문 삭제를 하면 포인트는? -> 생각 필요 ex) deadline 지나야 삭제 가능)
+    // 질문 삭제
+    @Transactional
     public void deleteQuestion(String questionId, String userId)  {
         Question question = questionRepository.findById(questionId).orElseThrow();
         if (!question.getAuthorId().equals(userId)) throw new AccessDeniedException("권한 없음");
 
         List<Reply> replies = replyRepository.findByQuestionIdOrderByCreatedTimeDesc(questionId);
+        // 데드라인 이전
+        if (question.getDeadline().isBefore(LocalDateTime.now())){
+            // 답글이 하나라도 존재시 삭제 불가
+            if (!replies.isEmpty()) throw new CannotDeleteReplyException("답글이 존재하여 질문을 삭제할 수 없습니다.");
+            // 삭제시 질문에 답변이 하나도 없을시 포인트 환불
+            pointService.refundQuestionReward(userId, question.getReward(), questionId);
+        }
 
         // 질문들에 달린 좋아요 삭제
         List<String> replyIds = replies.stream().map(Reply::getId).toList();
@@ -75,6 +112,22 @@ public class QuestionService {
 
         // 질문 삭제
         questionRepository.deleteById(questionId);
+    }
+
+    @Transactional
+    public void rewardReply(RewardRequestDto dto, String userId) {
+        Reply reply = replyRepository.findById(dto.getReplyId()).orElseThrow();
+        Question question = questionRepository.findById(dto.getQuestionId()).orElseThrow();
+
+        if (question.getSelectedAnswerId() != null) {
+            throw new AlreadyRewardedException("이미 보상된 질문입니다.");
+        }
+        // 포인트 처리
+        pointService.rewardPoint(userId, question.getReward(), question.getId());
+        // 변경사항 업데이트
+        question.setSelectedAnswerId(reply.getId());
+        question.setAutoSelected(false);
+        questionRepository.save(question);
     }
 
     // 질문 제목으로 검색

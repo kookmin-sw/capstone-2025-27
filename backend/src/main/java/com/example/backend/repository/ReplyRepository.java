@@ -1,6 +1,6 @@
 package com.example.backend.repository;
 
-import com.example.backend.entity.Reply;
+import com.example.backend.domain.Reply;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
