@@ -54,6 +54,7 @@ public class QuestionController {
         return ResponseEntity.ok(Map.of("message", "질문이 삭제되었습니다."));
     }
 
+    @Operation(summary = "답변 채택", description = "채택된 답변에 보상을 지급")
     @PostMapping("/answers/reward")
     public ResponseEntity<?> rewardReply(@RequestBody RewardRequestDto dto, @AuthenticationPrincipal CustomUserDetails userDetails) {
         questionService.rewardReply(dto, userDetails.getUserId());

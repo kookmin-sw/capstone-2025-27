@@ -3,14 +3,17 @@ package com.example.backend.service;
 import com.example.backend.domain.User;
 import com.example.backend.domain.transaction.Transaction;
 import com.example.backend.domain.transaction.TransactionType;
-import com.example.backend.exception.InsufficientPointsException;
-import com.example.backend.repository.QuestionRepository;
+import com.example.backend.exception.BusinessException;
+import com.example.backend.exception.ErrorCode;
+import com.example.backend.external.PortOneClient;
 import com.example.backend.repository.TransactionRepository;
 import com.example.backend.repository.UserRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -20,11 +23,20 @@ import java.time.LocalDateTime;
 public class PointService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
-    private final QuestionRepository questionRepository;
+    private final PortOneClient portOneClient;
 
     // 포인트 입금
-    public void chargePoint(String userId, Long amount) {
-        // imp_uid 로 결제 검증
+    @Transactional
+    public void chargePoint(String userId, String impUid) {
+        // imp_uid 로 결제 검증 + 정보 추출
+        JsonNode paymentInfo = portOneClient.verifyPayment(impUid);
+//        log.warn(paymentInfo.toString());
+        Long amount = paymentInfo.path("amount").asLong();
+        String status = paymentInfo.path("status").asText();
+
+        if (!"paid".equals(status)) {
+            throw new BusinessException(ErrorCode.PAYMENT_NOT_COMPLETED);
+        }
 
         // 포인트 적립
         User user = userRepository.findById(userId).orElseThrow();
@@ -44,16 +56,14 @@ public class PointService {
     }
 
     // 포인트 출금
-    public void requestWithdraw(String userId, Long amount, String accountInfo) {
-        if (amount <= 0) throw new IllegalStateException("인출 금액은 0보다 커야 합니다.");
+    public void withdrawPoint(String userId, Long amount) {
+        if (amount <= 0) throw new BusinessException(ErrorCode.WITHDRAW_AMOUNT_INVALID);
         // 포인트 체크
         checkEnoughPoints(userId, amount);
 
         User user = userRepository.findById(userId).orElseThrow();
-        user.setPoint(user.getPoint() - amount);
-        userRepository.save(user);
 
-        Transaction transaction = Transaction.builder()
+        Transaction request_transaction = Transaction.builder()
                 .userId(userId)
                 .amount(amount)
                 .type(TransactionType.WITHDRAW_REQUESTED)
@@ -61,7 +71,22 @@ public class PointService {
                 .createdTime(LocalDateTime.now())
                 .build();
 
-        transactionRepository.save(transaction);
+        transactionRepository.save(request_transaction);
+
+        // 검증 로직 (사업자 등록 필요)
+
+        user.setPoint(user.getPoint() - amount);
+        userRepository.save(user);
+
+        Transaction approved_transaction = Transaction.builder()
+                .userId(userId)
+                .amount(amount)
+                .type(TransactionType.WITHDRAW_APPROVED)
+                .referenceId(null)
+                .createdTime(LocalDateTime.now())
+                .build();
+
+        transactionRepository.save(approved_transaction);
     }
 
     // 포인트 소모
@@ -121,6 +146,6 @@ public class PointService {
     // 포인트 보유 여부 검증
     public void checkEnoughPoints(String userId, Long requiredAmount) {
         User user = userRepository.findById(userId).orElseThrow();
-        if (user.getPoint() < requiredAmount) throw new InsufficientPointsException("보유 포인트가 부족합니다.");
+        if (user.getPoint() < requiredAmount) throw new BusinessException(ErrorCode.INSUFFICIENT_POINTS);
     }
 }

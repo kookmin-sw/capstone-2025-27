@@ -5,6 +5,8 @@ import com.example.backend.dto.ReplyResponseDto;
 import com.example.backend.domain.Question;
 import com.example.backend.domain.Reply;
 import com.example.backend.domain.ReplyLike;
+import com.example.backend.exception.BusinessException;
+import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;
@@ -75,7 +77,7 @@ public class ReplyService {
     // 답변 좋아요
     public void likeReply(String replyId, String userId) {
         if (replyLikeRepository.existsByReplyIdAndUserId(replyId, userId)) {
-            throw new IllegalStateException("이미 좋아요를 한 답변입니다.");
+            throw new BusinessException(ErrorCode.REPLY_ALREADY_LIKED);
         }
         replyLikeRepository.save(new ReplyLike(null, replyId, userId));
         Reply reply = replyRepository.findById(replyId).orElseThrow();
@@ -86,7 +88,7 @@ public class ReplyService {
     // 답변 좋아요 취소
     public void unlikeReply(String replyId, String userId) {
         if (!replyLikeRepository.existsByReplyIdAndUserId(replyId, userId)) {
-            throw new IllegalStateException("좋아요가 되어있지 않은 답변입니다.");
+            throw new BusinessException(ErrorCode.REPLY_NOT_LIKED);
         }
         replyLikeRepository.deleteByReplyIdAndUserId(replyId, userId);
         Reply reply = replyRepository.findById(replyId).orElseThrow();

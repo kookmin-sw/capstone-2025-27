@@ -5,8 +5,8 @@ import com.example.backend.dto.QuestionResponseDto;
 import com.example.backend.domain.Question;
 import com.example.backend.domain.Reply;
 import com.example.backend.dto.RewardRequestDto;
-import com.example.backend.exception.AlreadyRewardedException;
-import com.example.backend.exception.CannotDeleteReplyException;
+import com.example.backend.exception.BusinessException;
+import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;
@@ -59,7 +59,7 @@ public class QuestionService {
 
     // 질문 검색 by question id
     public QuestionResponseDto getQuestion(String questionId) {
-        return new QuestionResponseDto(questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("질문을 찾을 수 없습니다.")));
+        return new QuestionResponseDto(questionRepository.findById(questionId).orElseThrow(() -> new BusinessException(ErrorCode.QUESTION_NOT_FOUND)));
     }
 
     // 질문 update
@@ -75,7 +75,7 @@ public class QuestionService {
         if (newReward > originalReward) {
             pointService.spendPoint(userId, newReward - originalReward, questionId);
         } else if (newReward < originalReward) {
-            throw new IllegalArgumentException("reward 를 이전 reward 보다 낮게 설정할 수 없음");
+            throw new BusinessException(ErrorCode.REWARD_UPDATE_INVALID);
         }
 
         question.setTitle(dto.getTitle());
@@ -98,7 +98,7 @@ public class QuestionService {
         // 데드라인 이전
         if (question.getDeadline().isBefore(LocalDateTime.now())){
             // 답글이 하나라도 존재시 삭제 불가
-            if (!replies.isEmpty()) throw new CannotDeleteReplyException("답글이 존재하여 질문을 삭제할 수 없습니다.");
+            if (!replies.isEmpty()) throw new BusinessException(ErrorCode.CAN_NOT_DELETE_REPLY);
             // 삭제시 질문에 답변이 하나도 없을시 포인트 환불
             pointService.refundQuestionReward(userId, question.getReward(), questionId);
         }
@@ -120,7 +120,7 @@ public class QuestionService {
         Question question = questionRepository.findById(dto.getQuestionId()).orElseThrow();
 
         if (question.getSelectedAnswerId() != null) {
-            throw new AlreadyRewardedException("이미 보상된 질문입니다.");
+            throw new BusinessException(ErrorCode.ALREADY_REWARDED);
         }
         // 포인트 처리
         pointService.rewardPoint(userId, question.getReward(), question.getId());

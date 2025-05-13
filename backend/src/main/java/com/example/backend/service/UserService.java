@@ -3,6 +3,8 @@ package com.example.backend.service;
 import com.example.backend.dto.LoginRequest;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.domain.User;
+import com.example.backend.exception.BusinessException;
+import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +27,10 @@ public class UserService {
 
     public User registerUser(RegisterRequest request){
         if(userRepository.findByUsername(request.getUsername()).isPresent()){
-            throw new IllegalArgumentException("이미 존재하는 username입니다.");
+            throw new BusinessException(ErrorCode.USERNAME_DUPLICATED);
         }
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 email입니다.");
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATED);
         }
 
         User user = User.builder()
