@@ -67,6 +67,12 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.searchByTitle(keyword));
     }
 
+    @Operation(summary = "카테고리로 질문 검색", description = "question 의 category 필드로 질문들 최신순 검색")
+    @GetMapping("/category")
+    public ResponseEntity<?> searchQuestionsByCategory(@RequestParam String category) {
+        return ResponseEntity.ok(questionService.searchByCategory(category));
+    }
+
     @Operation(summary = "무한 스크롤", description = "현시간(cursor) 기준으로 이전에 생성된 글을 10개(default)만큼 조회")
     @GetMapping
     public ResponseEntity<?> getQuestions(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime cursor,
