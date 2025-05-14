@@ -44,6 +44,7 @@ public class QuestionService {
                 .id(questionId)
                 .authorId(userId)
                 .title(dto.getTitle())
+                .category(dto.getCategory())
                 .content(dto.getContent())
                 .reward(dto.getReward())
                 .deadline(dto.getDeadline())
@@ -79,6 +80,7 @@ public class QuestionService {
         }
 
         question.setTitle(dto.getTitle());
+        question.setCategory(dto.getCategory());
         question.setContent(dto.getContent());
         question.setReward(dto.getReward());
         question.setDeadline(dto.getDeadline());
@@ -114,6 +116,7 @@ public class QuestionService {
         questionRepository.deleteById(questionId);
     }
 
+    // 현상금 보상
     @Transactional
     public void rewardReply(RewardRequestDto dto, String userId) {
         Reply reply = replyRepository.findById(dto.getReplyId()).orElseThrow();
@@ -133,6 +136,11 @@ public class QuestionService {
     // 질문 제목으로 검색
     public List<QuestionResponseDto> searchByTitle(String keyword) {
         return questionRepository.findByTitleRegexIgnoreCase(keyword).stream().map(QuestionResponseDto::new).toList();
+    }
+
+    // 질문 카테고리로 검색
+    public List<QuestionResponseDto> searchByCategory(String category) {
+        return questionRepository.findByCategoryOrderByCreateTimeDesc(category).stream().map(QuestionResponseDto::new).toList();
     }
 
     // 무한 스크롤 - 현시간 cursor 기준 이전에 생성된 글을 size 갯수 만큼 조회

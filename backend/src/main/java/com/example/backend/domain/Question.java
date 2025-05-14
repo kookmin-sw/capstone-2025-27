@@ -18,6 +18,7 @@ public class Question {
     @Id
     private String id;
     private String title;
+    private String category;
     private String content;
     private Long reward;
     private LocalDateTime createTime;
