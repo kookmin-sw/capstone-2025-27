@@ -93,6 +93,11 @@ declare global {
     }
 }
 
+export const categories = [
+  '1', '2', '3', '4',
+  '5', '6', '7', '8', '9', '10'
+]
+
 export function buyPoints(userId : string, amount : number) {
     console.log("User:",userId, " buying ", amount, "points")
 }
@@ -142,8 +147,14 @@ export function getQuestionById(questionId: string) {
         if (question.id == questionId) return question
     }
 }
-export function getUserQuestions(userId: string) {
-    return exQuestions
+export function getUserQuestions(userId: string | null) {
+  var qs = []
+  for(var question of exQuestions) {
+    if (question.authorId == userId) {
+      qs.push(question)
+    }
+  }
+  return qs
 }
 export function getUserReplyQuestions(userId: string) {
     return exQuestions
@@ -284,7 +295,7 @@ const exReply1 : REPLY = {
   createdTime: new Date(2025, 3, 18)
 }
 const exReply2 : REPLY = {
-  authorId: "14782",
+  authorId: "otherguy",
   questionId: "24321",
   id: "37258",
   content: "probably something like 12345km",

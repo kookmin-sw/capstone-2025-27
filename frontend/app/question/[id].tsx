@@ -1,11 +1,11 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
+import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import { getQuestionById, getQuestionReplies } from "@/api";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "@/components/contexts/UserContext";
 import { responsiveStyleSheet } from "@/components/responsive";
-import { bgColor, primaryColor, secondaryColor, tertiaryColor } from "@/components/styles";
+import { bgColor, cardColor, primaryColor, secondaryColor, tertiaryColor } from "@/components/styles";
 
 export default function QuestionDetailPage() {
   const { id } = useLocalSearchParams();
@@ -13,6 +13,8 @@ export default function QuestionDetailPage() {
   const [question, setQuestion] = useState<QUESTION>();
   const [replies, setReplies] = useState<Array<REPLY>>();
   const [selectedId, setSelectedId] = useState<string>();
+
+  const [hasReply, setHasReply] = useState<boolean>(false); //유저가 해당 질문에 답한적 있는지 확인
 
   const { user } = useUser()
   const [isMyQuestion, setIsMyQuestion] = useState<boolean>(false)
@@ -54,8 +56,20 @@ export default function QuestionDetailPage() {
     reply: REPLY
   }
   function ReplyCard({ reply } : RCProps) {
+    const [isMyReply, setIsMyReply] = useState<boolean>(false)
+
+    useEffect(() => {
+      if (reply.authorId == user?.id) {
+        console.log("reply: ", reply.authorId, "user: ", user.id)
+        setIsMyReply(true)
+        setHasReply(true)
+      }
+    }, [])
+
+    // 답변 카드
+    // 내 답변일때
     return (
-      <View style={styles.card}>
+      <View style={isMyReply ? styles.myCard : styles.card}>
         <View>
           <Text style={styles.title}>{reply.authorId}</Text>
           <Text>{reply.content}</Text>
@@ -64,6 +78,9 @@ export default function QuestionDetailPage() {
           </Text>
         </View>
           {isMyQuestion ?  <CheckBox reply={reply} /> : <View></View>}
+          {isMyReply ? <Pressable style={styles.editCommentButton}>
+            <Text style={styles.editCommentText}>수정</Text>
+            </Pressable> : <View></View>}
       </View>
     )
   }
@@ -76,6 +93,7 @@ export default function QuestionDetailPage() {
       }
     }, [selectedId])
 
+    // 체크박스 (답변 선택용)
     return (
       <Pressable onPress={() => toggleSelect(reply.id, reply.authorId)} style={styles.checkboxWrapper}>
         <Ionicons
@@ -87,6 +105,7 @@ export default function QuestionDetailPage() {
     )
   }
 
+  // 선택 버튼 (답변 선택용)
   function SelectAnswer() {
     if (selectedId == null || !isMyQuestion) return
     return (
@@ -96,8 +115,30 @@ export default function QuestionDetailPage() {
     )
   }
 
+  // 답변 제출용
+  function ReplyInput() {
+    const [newReplyContent, setNewReplyContent] = useState<string>()
+
+    if (hasReply) return;
+    return ( // 아직 답변을 달지 않았다면
+      <View>
+        <View style={[styles.myCard, {marginTop: 100}]}>
+          <TextInput
+            value={newReplyContent}
+            onChangeText={setNewReplyContent}
+            multiline
+            placeholder="답변 내용을 입력해주세요"
+            />
+        </View>
+        <Pressable style={styles.selectButton}>
+          <Text style={styles.selectButtonText}>답변 달기</Text>
+        </Pressable>
+      </View>
+    )
+  }
+
   return (
-    <View style={styles.questionContainer}>
+    <KeyboardAvoidingView style={[styles.questionContainer, {flex: 1}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View>
         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
           <View style={contentStyles.categoryTag}>
@@ -122,10 +163,11 @@ export default function QuestionDetailPage() {
           contentContainerStyle={styles.container}
         />
       </View>
+        <ReplyInput />
       <View style={styles.footer}>
         <SelectAnswer />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -141,8 +183,24 @@ const styles = responsiveStyleSheet({
     flex: 1,
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: cardColor,
     borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  myCard: {
+    backgroundColor: cardColor,
+    borderRadius: 12,
+    borderColor: secondaryColor,
+    borderWidth: 2,
     padding: 16,
     marginBottom: 12,
     shadowColor: "#000",
@@ -185,8 +243,8 @@ const styles = responsiveStyleSheet({
   },
   selectButtonText: {
     color: bgColor,
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 13,
+    fontWeight: '500',
     letterSpacing: 0.5,
   },
   footer: {
@@ -194,6 +252,14 @@ const styles = responsiveStyleSheet({
     borderTopWidth: 1,
     borderColor: '#eee',
   },
+  editCommentButton: {
+    backgroundColor: tertiaryColor,
+    padding: 10,
+    borderRadius: 4,
+  },
+  editCommentText: {
+    color: bgColor,
+  }
 });
   
 

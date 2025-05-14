@@ -21,7 +21,6 @@ export default function QuestionPage() {
   useEffect(() => {
     const fetchData = async () => {
       const allQuestions = await getQuestions();
-      console.log("change")
       setQuestions(allQuestions);
     };
     fetchData();

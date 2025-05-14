@@ -1,10 +1,10 @@
 // app/question/new.tsx
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, Alert } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { responsiveStyleSheet } from "@/components/responsive";
 import { secondaryColor } from "@/components/styles";
-import { uploadQuestion } from "@/api";
+import { categories, uploadQuestion } from "@/api";
 import { useUser } from "@/components/contexts/UserContext";
 import DateInput from "@/components/DateInput";
 import SelectCategory from "@/components/SelectCategory";
@@ -38,7 +38,7 @@ export default function NewQuestionPage() {
     return (question.content !== "")
   }
   function checkcategory() {
-    return true// (question.category !== "")
+    return (question.category !== "")
   }
   function checkreward() {
     return (question.reward > minReward())
@@ -48,10 +48,11 @@ export default function NewQuestionPage() {
     console.log("handleSubmit")
     if (checktitle() && checkcontent() && checkcategory() && checkreward()) {
       uploadQuestion(question, user)
+      router.back();
     } else {
      console.log("cannot upload question")
+     Alert.alert("질문을 올리지 못했습니다.")
     }
-    router.back();
   };
 
   return (
@@ -59,12 +60,16 @@ export default function NewQuestionPage() {
       <Text style={styles.label}>카테고리</Text>
       <SelectCategory
         value={question.category}
-        onValueChange={(chosen) => setQuestion((prev) => ({...prev, category: chosen}))}
+        onValueChange={(chosen : any) => setQuestion((prev) => ({...prev, category: chosen}))}
         items={[
-          { label: '과학', value: '과학' },
-          { label: '가전', value: '가전' },
-          { label: '부엌', value: '부엌' },
-          { label: 'IT', value: 'IT' },
+          { label: categories[0], value: categories[0]},
+          { label: categories[1], value: categories[0]},
+          { label: categories[2], value: categories[0]},
+          { label: categories[3], value: categories[0]},
+          { label: categories[4], value: categories[0]},
+          { label: categories[5], value: categories[0]},
+          { label: categories[6], value: categories[0]},
+          { label: categories[7], value: categories[0]},
         ]}
       />
       <View style={styles.divider} />
@@ -90,17 +95,17 @@ export default function NewQuestionPage() {
         onChangeText={(text) => {
           const num = parseFloat(text);
           if (isNaN(num)) {
-            setQuestion((prev) => ({...prev, reward: (-1)}))
+            setQuestion((prev) => ({...prev, reward: (0)}))
           } else {
             setQuestion((prev) => ({...prev, reward: (num)}))
           }
         }}
-        placeholder="Enter a number"
+        placeholder="현상금을 입력하세요"
         keyboardType="numeric"
       />
       <View style={styles.divider} />
       <Text style={styles.label}>답변기한</Text>
-      <DateInput date={question.deadline} onChange={(date) => setQuestion((prev) => ({...prev, deadline: date}))} />
+      <DateInput date={question.deadline} onChange={(date : any) => setQuestion((prev) => ({...prev, deadline: date}))} />
       <Button color={secondaryColor} title="질문 등록" onPress={handleSubmit} />
     </View>
   );

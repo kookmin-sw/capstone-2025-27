@@ -5,7 +5,7 @@ export const bgColor = "#f9f7f1"
 export const cardColor = "#ffffff"
 export const primaryColor = "#c9a348"
 export const secondaryColor = "#02066f"
-export const tertiaryColor = "##6e6e6e"
+export const tertiaryColor = "#6e6e6e"
 export const fontfamily = "monospace"
 
 const {height, width} = Dimensions.get("screen")

@@ -1,6 +1,9 @@
 <!-- CASHQ&A README.md -->
 
-<h1 align="center" style="color:#c9a348;">📱 CASHQ&A</h1>
+<h1 align="center" style="display:flex; justify-content:center">
+  <span style="color:#c9a348;">📱 CASH</span>
+  <span style="color:#02066f;">Q&A</span>
+</h1>
 
 <p align="center" style="color:#6e6e6e;">
 현금 보상 기반 지식 공유 모바일 플랫폼
@@ -45,6 +48,7 @@
 
 2. AI의 한계를 보완하는 인간 중심 Q&A 플랫폼 조성: CASHQ&A는 인간의 AI 의존증을 낮추어 중요한 상황에서 신뢰할 수 있는 전문가의 의견을 원활하게 받을 수 있도록 돕고자 합니다.
 
+### 간단히:
 - ✔️ 사용자 간 **유익한 지식 공유 활성화**
 - ✔️ 청년층을 위한 **현금 보상형 참여 유도**
 - ✔️ 기업 대상의 **타겟 광고 및 설문 수익화**

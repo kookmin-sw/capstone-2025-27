@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity, Alert } from "react-native";
 import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
@@ -13,20 +13,13 @@ export default function SignIn() {
   const { saveUser } = useUser();
 
   const login = async () => {
-    // const res = await userSignIn(user)
-    // if (res != null) {
-      saveUser({
-        username: "bobthebuilder",
-        id: "bobthebuilder",
-        email: "exampleUser@ex.com",
-        password: "example",
-        points: 2000
-      })
-    //   router.push("/(tabs)")
-    // } else {
-    //   console.log("Incorrect Username or Password")
-    // }
-    router.push("/(tabs)") // test code
+    const res = exUser // await userSignIn(user)
+    if (res != null) {
+      saveUser(res)
+      router.push("/(tabs)")
+    } else {
+      Alert.alert("로그인 실패", "아이디와 비밀번호를 확인해주세요")
+    }
   }
 
   return (
@@ -38,7 +31,7 @@ export default function SignIn() {
         <Text style={authStyles.subText}>아이디</Text>
         <TextInput
         style={authStyles.textInput} 
-        placeholder="아이디" value={user.username} 
+        placeholder="아이디" value={user?.username} 
         onChangeText={(username) => setUser({...user, username: username})}
         autoCapitalize="none"
         autoCorrect={false}

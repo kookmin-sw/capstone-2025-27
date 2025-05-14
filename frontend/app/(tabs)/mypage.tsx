@@ -16,12 +16,21 @@ export default function MyPage() {
     router.push("/signIn")
   }
 
-  if (!user) return null;
+  if(!user) {
+    return (
+      <View>
+        <Text>마이페이지를 사용하기 위해 로그인 해주세요</Text>
+        <Pressable onPress={signOut} style={styles.selectButton}>
+          <Text style={styles.selectButtonText}>로그인하러 가기</Text>
+        </Pressable>
+      </View>
+    )
+  }
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.username}>{user.username}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+        <Text style={styles.username}>{user?.username}</Text>
+        <Text style={styles.email}>{user?.email}</Text>
       </View>
 
       <TransactionCard />
