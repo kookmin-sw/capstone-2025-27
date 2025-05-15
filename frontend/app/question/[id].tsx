@@ -50,7 +50,7 @@ export default function QuestionDetailPage() {
       fetchData();
   }, [id]);
 
-  if (!question) return <Text>Loading...</Text>;
+  if (!question) return <Text style={{textAlign: "center", paddingBlockStart: 200}}>Loading...</Text>;
 
   type RCProps = {
     reply: REPLY
