@@ -72,6 +72,20 @@ public class QuestionService {
         return new QuestionResponseDto(question, authorName);
     }
 
+    // 유저 아이디로 생성한 질문 모두 가져오기
+    public List<QuestionResponseDto> getQuestionsByUserId(String userId) {
+        return questionRepository.findAllByAuthorIdOrderByCreateTimeDesc(userId)
+                .stream()
+                .map(q -> {
+                            String authorName = userRepository.findById(q.getAuthorId())
+                                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
+                                    .getUsername();
+                            return new QuestionResponseDto(q, authorName);
+                        }
+                )
+                .toList();
+    }
+
     // 질문 update
     @Transactional
     public void updateQuestion(String questionId, QuestionRequestDto dto, String userId)  {
@@ -142,31 +156,27 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
-    // 질문 제목으로 검색
-    public List<QuestionResponseDto> searchByTitle(String keyword) {
-        return questionRepository.findByTitleRegexIgnoreCase(keyword)
-                .stream()
-                .map(q -> {
-                    String authorName = userRepository.findById(q.getAuthorId())
-                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
-                            .getUsername();
-                    return new QuestionResponseDto(q, authorName);
-                    }
-                )
-                .toList();
-    }
+    // 질문 검색 (제목, 카테고리)
+    public List<QuestionResponseDto> search(String keyword, String category) {
+        List<Question> questions;
 
-    // 질문 카테고리로 검색
-    public List<QuestionResponseDto> searchByCategory(String category) {
-        return questionRepository.findByCategoryOrderByCreateTimeDesc(category)
-                .stream()
+        if (keyword != null && category != null) {
+            questions = questionRepository.findByTitleRegexIgnoreCaseAndCategoryOrderByCreateTimeDesc(keyword, category);
+        } else if (keyword != null) {
+            questions = questionRepository.findByTitleRegexIgnoreCase(keyword);
+        } else if (category != null) {
+            questions = questionRepository.findByCategoryOrderByCreateTimeDesc(category);
+        } else {
+            questions = questionRepository.findAllByOrderByCreateTimeDesc();
+        }
+
+        return questions.stream()
                 .map(q -> {
                     String authorName = userRepository.findById(q.getAuthorId())
                             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
                             .getUsername();
                     return new QuestionResponseDto(q, authorName);
-                    }
-                )
+                })
                 .toList();
     }
 

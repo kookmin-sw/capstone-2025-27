@@ -43,6 +43,19 @@ public class ReplyService {
                 .toList();
     }
 
+    public List<ReplyResponseDto> getRepliesByUserId(String userId) {
+        return replyRepository.findAllByAuthorIdOrderByCreatedTimeDesc(userId)
+                .stream()
+                .map(reply -> new ReplyResponseDto(
+                                reply,
+                                userRepository.findById(reply.getAuthorId()).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)).getUsername(),
+                                false,
+                                replyLikeRepository.existsByReplyIdAndUserId(reply.getId(), userId)
+                        )
+                )
+                .toList();
+    }
+
     // 질문에 답변 생성
     public void createReply(ReplyRequestDto dto, String userId) {
         if (userId == null) throw new AccessDeniedException("로그인 정보 없음");

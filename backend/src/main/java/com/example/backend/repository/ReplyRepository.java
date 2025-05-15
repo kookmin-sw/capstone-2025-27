@@ -8,5 +8,7 @@ import java.util.List;
 public interface ReplyRepository extends MongoRepository<Reply, String> {
     List<Reply> findByQuestionIdOrderByCreatedTimeDesc(String questionId);
 
+    List<Reply> findAllByAuthorIdOrderByCreatedTimeDesc(String authorId);
+
     void deleteAllByQuestionId(String questionId);
 }

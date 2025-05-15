@@ -28,6 +28,12 @@ public class ReplyController {
         return ResponseEntity.ok(replyService.getReplies(questionId, userDetails.getUserId()));
     }
 
+    @Operation(summary = "유저가 남긴 답변 모두 조회", description = "user id로 답변 모두 조회")
+    @GetMapping("/user")
+    public ResponseEntity<List<ReplyResponseDto>> getRepliesByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(replyService.getRepliesByUserId(userDetails.getUserId()));
+    }
+
     @Operation(summary = "질문에 답변 생성", description = "질문에 답변 생성")
     @PostMapping
     public ResponseEntity<?> createReply(@RequestBody ReplyRequestDto dto,

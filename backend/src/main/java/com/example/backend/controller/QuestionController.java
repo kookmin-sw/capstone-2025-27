@@ -38,6 +38,12 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.getQuestion(id));
     }
 
+    @Operation(summary = "질문 모두 조회 by User Id", description = "User id로 질문 모두 조회")
+    @GetMapping("/user")
+    public ResponseEntity<?> getQuestionsByUserId(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(questionService.getQuestionsByUserId(userDetails.getUserId()));
+    }
+
     @Operation(summary = "질문 수정", description = "질문을 수정")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateQuestion(@PathVariable String id,
@@ -61,16 +67,11 @@ public class QuestionController {
         return ResponseEntity.ok(Map.of("message", "보상이 완료되었습니다."));
     }
 
-    @Operation(summary = "제목으로 질문 검색", description = "정규식(regex)를 이용해 제목으로 질문 검색 *추후에 text-index 로 마이그레이션 필요")
+    @Operation(summary = "질문 검색(제목 키워드, 카테고리)", description = "카테고리, 정규식(regex)를 이용해 제목으로 질문 검색 *추후에 text-index 로 마이그레이션 필요")
     @GetMapping("/search")
-    public ResponseEntity<?> searchQuestions(@RequestParam String keyword) {
-        return ResponseEntity.ok(questionService.searchByTitle(keyword));
-    }
-
-    @Operation(summary = "카테고리로 질문 검색", description = "question 의 category 필드로 질문들 최신순 검색")
-    @GetMapping("/category")
-    public ResponseEntity<?> searchQuestionsByCategory(@RequestParam String category) {
-        return ResponseEntity.ok(questionService.searchByCategory(category));
+    public ResponseEntity<?> searchQuestions(@RequestParam(required = false) String keyword,
+                                             @RequestParam(required = false) String category) {
+        return ResponseEntity.ok(questionService.search(keyword, category));
     }
 
     @Operation(summary = "무한 스크롤", description = "현시간(cursor) 기준으로 이전에 생성된 글을 10개(default)만큼 조회")
