@@ -13,4 +13,6 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
     List<Question> findByTitleRegexIgnoreCase(String keyword);
 
     List<Question> findByCreateTimeBeforeOrderByCreateTimeDesc(LocalDateTime cursor, Pageable pageable);
+
+    List<Question> findByCategoryOrderByCreateTimeDesc(String category);
 }

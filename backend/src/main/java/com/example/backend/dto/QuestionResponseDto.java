@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class QuestionResponseDto {
     private String id;
     private String title;
+    private String category;
     private String content;
     private Long reward;
     private LocalDateTime deadline;
@@ -23,6 +24,7 @@ public class QuestionResponseDto {
     public QuestionResponseDto(Question q) {
         this.id = q.getId();
         this.title = q.getTitle();
+        this.category = q.getCategory();
         this.content = q.getContent();
         this.reward = q.getReward();
         this.deadline = q.getDeadline();
