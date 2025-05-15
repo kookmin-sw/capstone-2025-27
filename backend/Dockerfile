@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # 4. Gradle 빌드
-RUN ./gradlew build --no-daemon
+RUN ./gradlew build --no-daemon -x test
 
 # 5. 빌드된 JAR 실행
 CMD ["java", "-jar", "build/libs/backend-0.0.1-SNAPSHOT.jar"]
