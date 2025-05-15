@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import { bgColor, primaryColor, secondaryColor } from './styles';
+import { categories } from '@/api';
 
 interface SearchBarProps {
   value: string;
@@ -19,7 +20,7 @@ interface SearchBarProps {
   setSelectedCategory: (category: string) => void;
 }
 
-const CATEGORIES = ['과학', '가전', '부엌', 'IT', 'All'];
+const CATEGORIES = categories;
 
 const SearchBar: React.FC<SearchBarProps> = ({
   value,

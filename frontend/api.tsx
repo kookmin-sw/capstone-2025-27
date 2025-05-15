@@ -166,8 +166,27 @@ export function getUserQuestions(userId: string | null) {
 export function getUserReplyQuestions(userId: string) {
     return exQuestions
 }
-export function getQuestionsByQueryCategory(query: string, category: string) {
-  return [exQuestion1, exQuestion2]
+export async function getQuestionsByQueryCategory(query: string, category: string) {
+  try {
+    const token = await SecureStore.getItemAsync("token");
+    const response = await axios.get(`${BASE_URL}/questions/search`, {
+      params: {
+        category: category,
+        keyword: query 
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    console.log(`${name} status: `, response.status)
+    if (response.status === 401) return null
+    return response.data;
+  } catch (error) {
+      console.log("Error : ", error)
+  }
+  return null
+  
 }
 
 async function get(URL: string, name: string) {
