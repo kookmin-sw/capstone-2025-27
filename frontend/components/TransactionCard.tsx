@@ -2,10 +2,16 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useUser } from "./contexts/UserContext";
 import { responsiveStyleSheet } from "./responsive";
 import { bgColor, cardColor, primaryColor, secondaryColor } from "./styles";
+import { useRouter } from "expo-router";
 
 export function TransactionCard() {
+  const router = useRouter()
 
   const { user } = useUser()
+
+  function toPurchasePage() {
+    router.push('/(mycontent)/purchase')
+  }
 
   if (user?.id == undefined) {
     return (
@@ -22,6 +28,7 @@ export function TransactionCard() {
       <View style={styles.buttonRow}>
         <Pressable
           style={styles.button}
+          onPress={toPurchasePage}
         >
           <Text style={styles.buttonText}>포인트 구매</Text>
         </Pressable>

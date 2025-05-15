@@ -34,13 +34,13 @@ export default function QuestionDetailPage() {
     if (typeof id !== "string") return
 
     const fetchData = async () => {
-      const question = getQuestionById(id)
+      const question =  await getQuestionById(id)
       if(question == undefined) return null
 
       setQuestion(question)
       navigation.setOptions({ title : question.title })
 
-      const replies = getQuestionReplies(question.id)
+      const replies = await getQuestionReplies(question.id)
       setReplies(replies)
 
       if (user?.id === question.authorId) {

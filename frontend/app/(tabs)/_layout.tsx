@@ -10,7 +10,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import AppIcon from '@/components/AppIcon';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   const mainHeaderStyle = {
     fontSize: 30,
@@ -20,7 +19,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors['light'].tint,
         headerShown: true,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,

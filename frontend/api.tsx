@@ -2,51 +2,24 @@
 import axios from "axios"
 import * as SecureStore from 'expo-secure-store'
 
-const BASE_URL = "http://192.168.229.119:8080";
-
-declare global {
-    interface TODO {
-        date: Date,
-        content: string,
-        accomplished: boolean
-    }
-    interface DAILY {
-        date: Date,
-        todos: Array<TODO>,
-        id: number,
-        color: string
-    }
-    interface STEP {
-        description: string,
-        startPeriod: Date,
-        endPeriod: Date,
-        dailies: Array<DAILY>
-    }
-    interface ROADMAP {
-        steps: Array<STEP>,
-        id: number,
-        startDate: Date,
-        endDate: Date,
-    }
-}
+const BASE_URL = "http://capstone-2025-27-backend.onrender.com";
 
 export async function userSignIn(user : USER) : Promise<USER | null> {
-    try {
-      const response = await axios.post(`${BASE_URL}/auth/login`, {
-        username: user.username,
-        password: user.password
-      })
-      console.log("from userSignIn : ", response.data)
-      const token = response.data.token
-      await SecureStore.deleteItemAsync("token")
-      await SecureStore.setItemAsync("token", token);
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/login`, {
+      username: user.username,
+      password: user.password
+    })
+    const token = response.data.token
+    await SecureStore.deleteItemAsync("token")
+    await SecureStore.setItemAsync("token", token);
 
-      if (response.status === 401) return null
-      return exUser;
-    } catch (error) {
-        console.log("Error while login : ", error)
-    }
-    return null // success true, fail false
+    if (response.status === 401) return null
+    return exUser;
+  } catch (error) {
+      console.log("Error while login : ", error)
+  }
+  return null
 }
 export async function userSignUp(user : USER) : Promise<boolean> {
     try {
@@ -54,11 +27,12 @@ export async function userSignUp(user : USER) : Promise<boolean> {
           email: user.email,
           username: user.username,
           password: user.password
+        }, {
+          withCredentials: true
         })
-        console.log(response.data)
         return true;
     } catch (error) {
-        console.log("Error while signUp : ", error)
+        console.log("Error while signUp : ")
     }
     return false // success true, fail false
 }
@@ -98,54 +72,87 @@ export const categories = [
   '5', '6', '7', '8', '9', '10'
 ]
 
-export function buyPoints(userId : string, amount : number) {
-    console.log("User:",userId, " buying ", amount, "points")
+export async function buyPoints(rsp : any) {
+  const token = await SecureStore.getItemAsync("token");
+
+  try {
+    await axios.post(
+      `${BASE_URL}/point/charge`,
+      { impUid: rsp.imp_uid },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    alert('포인트 충전 성공!');
+  } catch (err: any) {
+    console.error(err);
+    alert(
+      '결제 실패: 백엔드 처리 중 오류 발생: ' +
+        (err.response?.data?.message || '알 수 없는 오류')
+    );
+  }
 }
 export function sellPoints(userId : string, amount : number) {
     console.log("User:", userId, " selling ", amount, "points")
 }
 
 export async function uploadQuestion(question: QUESTION, user: USER) {
+  const response = await set("questions", "uploadQuestions", {
+    title: question.title,
+    category: question.category,
+    content: question.content,
+    reward: question.reward,
+    deadline: question.deadline
+  })
+  return response
+}
+export async function uploadReply(replyContent: string, questionId: string) {
+  const response = await set("replies", "uploadReply", {
+    questionId: questionId,
+    content: replyContent
+  })
+  return response
+}
+export async function chooseReply(questionId: string, replyId: string) {
+  const response = await set(`questions/replies/reward`, "chooseReply", {
+    questionId: questionId,
+    replyId: replyId
+  })
+  return response
+}
+
+async function set(URL: string, name: string, body: object) {
   try {
     const token = await SecureStore.getItemAsync("token");
-    const response = await axios.post(`${BASE_URL}/questions`, {
-      title: question.title,
-      content: question.content,
-      reward: question.reward,
-      deadline: question.deadline,
-    }, {
+    const response = await axios.post(`${BASE_URL}/${URL}`,
+      body, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
-    console.log("uploadQuestion status:", response.status)
+    console.log(`${name} status:`, response.status)
     if (response.status === 401) return false
     return true;
   } catch (error) {
-      console.log("Error while login : ", error)
+      console.log("Error : ", error)
   }
-  return false // success true, fail false
-}
-export function uploadReply(answer: REPLY) {
-    console.log("User:", answer.authorId, " answering question:", answer.questionId)
+  return false
 }
 
-export function chooseReply(questionId: string, answerId: string) {
-    console.log("Answer:", answerId, " chosend for question:", questionId)
+export async function getQuestions() {
+  const data = await get(`questions`, "getQuestions")
+  return data
 }
-
-export function getUser(userId: string) {
-    return exUser
+export async function getQuestionById(questionId: string) {
+  const data = await get(`questions/${questionId}`, "getQuestionById")
+  return data
 }
-export function getQuestions() {
-    return exQuestions
-}
-export function getQuestionById(questionId: string) {
-    const q = getQuestions()
-    for (var question of q) {
-        if (question.id == questionId) return question
-    }
+export async function getQuestionReplies(questionId: string) {
+  const data = await get(`replies/${questionId}`, "getQuestionReplies")
+  return data
 }
 export function getUserQuestions(userId: string | null) {
   var qs = []
@@ -159,19 +166,28 @@ export function getUserQuestions(userId: string | null) {
 export function getUserReplyQuestions(userId: string) {
     return exQuestions
 }
-
-export function getQuestionReplies(questionId: string) {
-    return exReplies
-}
-
 export function getQuestionsByQueryCategory(query: string, category: string) {
   return [exQuestion1, exQuestion2]
 }
 
+async function get(URL: string, name: string) {
+  try {
+    const token = await SecureStore.getItemAsync("token");
+    const response = await axios.get(`${BASE_URL}/${URL}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
+    console.log(`${name} status: `, response.status)
+    if (response.status === 401) return null
+    return response.data;
+  } catch (error) {
+      console.log("Error : ", error)
+  }
+  return null
 
-
-
+}
 
 
 
