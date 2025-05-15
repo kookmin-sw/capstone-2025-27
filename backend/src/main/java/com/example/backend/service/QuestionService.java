@@ -10,6 +10,7 @@ import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;
+import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
+    private final UserRepository userRepository;
     private final PointService pointService;
 
 
@@ -60,7 +62,14 @@ public class QuestionService {
 
     // 질문 검색 by question id
     public QuestionResponseDto getQuestion(String questionId) {
-        return new QuestionResponseDto(questionRepository.findById(questionId).orElseThrow(() -> new BusinessException(ErrorCode.QUESTION_NOT_FOUND)));
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.QUESTION_NOT_FOUND));
+
+        String authorName = userRepository.findById(question.getAuthorId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
+                .getUsername();
+
+        return new QuestionResponseDto(question, authorName);
     }
 
     // 질문 update
@@ -135,12 +144,30 @@ public class QuestionService {
 
     // 질문 제목으로 검색
     public List<QuestionResponseDto> searchByTitle(String keyword) {
-        return questionRepository.findByTitleRegexIgnoreCase(keyword).stream().map(QuestionResponseDto::new).toList();
+        return questionRepository.findByTitleRegexIgnoreCase(keyword)
+                .stream()
+                .map(q -> {
+                    String authorName = userRepository.findById(q.getAuthorId())
+                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
+                            .getUsername();
+                    return new QuestionResponseDto(q, authorName);
+                    }
+                )
+                .toList();
     }
 
     // 질문 카테고리로 검색
     public List<QuestionResponseDto> searchByCategory(String category) {
-        return questionRepository.findByCategoryOrderByCreateTimeDesc(category).stream().map(QuestionResponseDto::new).toList();
+        return questionRepository.findByCategoryOrderByCreateTimeDesc(category)
+                .stream()
+                .map(q -> {
+                    String authorName = userRepository.findById(q.getAuthorId())
+                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
+                            .getUsername();
+                    return new QuestionResponseDto(q, authorName);
+                    }
+                )
+                .toList();
     }
 
     // 무한 스크롤 - 현시간 cursor 기준 이전에 생성된 글을 size 갯수 만큼 조회
@@ -151,7 +178,13 @@ public class QuestionService {
         List<Question> questions = questionRepository.findByCreateTimeBeforeOrderByCreateTimeDesc(cursorTime, pageable);
 
         return questions.stream()
-                .map(QuestionResponseDto::new)
+                .map(q -> {
+                            String authorName = userRepository.findById(q.getAuthorId())
+                                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
+                                    .getUsername();
+                            return new QuestionResponseDto(q, authorName);
+                    }
+                )
                 .toList();
     }
 }

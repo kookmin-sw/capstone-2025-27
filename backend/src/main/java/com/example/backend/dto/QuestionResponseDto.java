@@ -21,14 +21,14 @@ public class QuestionResponseDto {
     private String selectedAnswerId;
     private boolean autoSelected;
 
-    public QuestionResponseDto(Question q) {
+    public QuestionResponseDto(Question q, String authorName) {
         this.id = q.getId();
         this.title = q.getTitle();
         this.category = q.getCategory();
         this.content = q.getContent();
         this.reward = q.getReward();
         this.deadline = q.getDeadline();
-        this.authorId = q.getAuthorId();
+        this.authorId = authorName;
         this.selectedAnswerId = q.getSelectedAnswerId();
         this.autoSelected = q.isAutoSelected();
     }

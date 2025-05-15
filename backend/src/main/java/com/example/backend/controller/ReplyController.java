@@ -23,8 +23,8 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @Operation(summary = "질문에 달린 답변 모두 조회", description = "질문 id로 질문에 달린 답변을 모두 조회")
-    @GetMapping
-    public ResponseEntity<List<ReplyResponseDto>> getReplies(@RequestParam String questionId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+    @GetMapping("/{questionId}")
+    public ResponseEntity<List<ReplyResponseDto>> getReplies(@PathVariable String questionId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok(replyService.getReplies(questionId, userDetails.getUserId()));
     }
 
