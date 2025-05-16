@@ -21,15 +21,14 @@ export default function SignIn() {
     const res = await userSignIn(user)
     if (res != null) {
       const u = await getUser()
-      console.log(u)
-      saveUser({
+      const saveU = {
         id: u.username,
         email: u.email,
         username: u.username,
         points: u.points,
         password: "",
-      })
-      saveUser(user)
+      }
+      saveUser(saveU)
       router.push("/(tabs)")
     } else {
       Alert.alert("로그인 실패", "아이디와 비밀번호를 확인해주세요")

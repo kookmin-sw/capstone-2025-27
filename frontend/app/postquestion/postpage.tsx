@@ -44,14 +44,16 @@ export default function NewQuestionPage() {
     return (question.reward > minReward())
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("handleSubmit")
     if (checktitle() && checkcontent() && checkcategory() && checkreward()) {
-      uploadQuestion(question, user)
-      router.back();
+      const res = await uploadQuestion(question, user)
+      if (res) router.back();
+      else {
+        Alert.alert("질문 실패", "질문을 올리지 못했습니다")
+      }
     } else {
-     console.log("cannot upload question")
-     Alert.alert("질문을 올리지 못했습니다.")
+      Alert.alert("질문 실패", "질문을 올리지 못했습니다")
     }
   };
 

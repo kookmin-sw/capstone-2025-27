@@ -15,7 +15,6 @@ export default function PostquestionLayout() {
       }}
     >
       <Stack.Screen name="postpage" options={{title: "질문하기"}} />
-      <Stack.Screen name="postreply" options={{title: "답변하기"}} />
     </Stack>
   )
 }

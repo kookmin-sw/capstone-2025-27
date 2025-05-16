@@ -2,10 +2,9 @@
 import axios from "axios"
 import * as SecureStore from 'expo-secure-store'
 
-const BASE_URL = "http://capstone-2025-27-backend.onrender.com";
+const BASE_URL = "https://capstone-2025-27-backend.onrender.com";
 
 export async function userSignIn(user : USER) : Promise<USER | null> {
-  return user
   try {
     const response = await axios.post(`${BASE_URL}/auth/login`, {
       username: user.username,
@@ -23,7 +22,6 @@ export async function userSignIn(user : USER) : Promise<USER | null> {
   return null
 }
 export async function userSignUp(user : USER) : Promise<boolean> {
-  return true;
   try {
       const response = await axios.post(`${BASE_URL}/auth/signup`, {
         email: user.email,
@@ -39,9 +37,13 @@ export async function userSignUp(user : USER) : Promise<boolean> {
   return false
 }
 export async function getUser() {
-  return exUser
   const data = await get(`user`, "getUser")
-  return data
+  return {
+    id: data.userName,
+    email: data.userEmail,
+    username: data.userName,
+    points: data.point
+  }
 }
 
 declare global {
@@ -143,23 +145,20 @@ async function set(URL: string, name: string, body: object) {
     if (response.status === 401) return false
     return true;
   } catch (error) {
-      console.log("Error : ", error)
+      console.log(`Error : ${name}`, error)
   }
   return false
 }
 
 export async function getQuestions() {
-  return exQuestions
   const data = await get(`questions`, "getQuestions")
   return data
 }
 export async function getQuestionById(questionId: string) {
-  return exQuestion1
   const data = await get(`questions/${questionId}`, "getQuestionById")
   return data
 }
 export async function getQuestionReplies(questionId: string) {
-  return exReplies
   const data = await get(`replies/${questionId}`, "getQuestionReplies")
   return data
 }
@@ -187,10 +186,9 @@ export async function getQuestionsByQueryCategory(query: string, category: strin
     if (response.status === 401) return null
     return response.data;
   } catch (error) {
-      console.log("Error from set: ", error)
+      console.log(`Error from set: `, error)
   }
   return null
-  
 }
 
 async function get(URL: string, name: string) {
@@ -206,10 +204,9 @@ async function get(URL: string, name: string) {
     if (response.status === 401) return null
     return response.data;
   } catch (error) {
-      console.log("Error from get: ", error)
+      console.log(`Error from : ${name}`, error)
   }
   return null
-
 }
 
 
