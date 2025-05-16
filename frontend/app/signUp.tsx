@@ -11,7 +11,6 @@ export default function SignUp() {
   const router = useRouter()
 
   const login = async () : Promise<boolean> => {
-    console.log(user.email, " --- ", user.password)
     const res = await userSignUp(user)
     if (res) {
       router.push("/signIn")

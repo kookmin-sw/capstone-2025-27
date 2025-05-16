@@ -2,20 +2,34 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity
 import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import { userSignIn, exUser } from "../api"
+import { userSignIn, exUser, getUser } from "../api"
 import { useUser } from "@/components/contexts/UserContext";
 import AppIcon from "@/components/AppIcon";
 
 export default function SignIn() {
 
-  const [user, setUser] = useState<USER>(exUser);
+  const [user, setUser] = useState<USER>({
+    email: "",
+    username: "",
+    id: "",
+    points: 0
+  });
   const router = useRouter()
   const { saveUser } = useUser();
 
   const login = async () => {
-    const res = exUser // await userSignIn(user)
+    const res = await userSignIn(user)
     if (res != null) {
-      saveUser(res)
+      const u = await getUser()
+      console.log(u)
+      saveUser({
+        id: u.username,
+        email: u.email,
+        username: u.username,
+        points: u.points,
+        password: "",
+      })
+      saveUser(user)
       router.push("/(tabs)")
     } else {
       Alert.alert("로그인 실패", "아이디와 비밀번호를 확인해주세요")

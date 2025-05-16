@@ -1,6 +1,6 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
-import { getQuestionById, getQuestionReplies } from "@/api";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { getQuestionById, getQuestionReplies, uploadReply } from "@/api";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "@/components/contexts/UserContext";
@@ -15,12 +15,15 @@ export default function QuestionDetailPage() {
   const [selectedId, setSelectedId] = useState<string>();
 
   const [hasReply, setHasReply] = useState<boolean>(false); //유저가 해당 질문에 답한적 있는지 확인
+  const [addingReply, setAddingReply] = useState<boolean>(false);
 
   const { user } = useUser()
   const [isMyQuestion, setIsMyQuestion] = useState<boolean>(false)
 
   const [selectedAuthorId, setSelectedAuthorId] = useState('')
 
+  const router = useRouter()
+  
   const toggleSelect = (replyId : string, authorId : string) => {
     setSelectedId(replyId);
     setSelectedAuthorId(authorId)
@@ -64,7 +67,7 @@ export default function QuestionDetailPage() {
         setIsMyReply(true)
         setHasReply(true)
       }
-    }, [])
+    }, [addingReply])
 
     // 답변 카드
     // 내 답변일때
@@ -117,23 +120,41 @@ export default function QuestionDetailPage() {
 
   // 답변 제출용
   function ReplyInput() {
-    const [newReplyContent, setNewReplyContent] = useState<string>()
-
+    function nowAddingReply() {
+      setAddingReply(true)
+    }
+    async function postReply() {
+      if (typeof question == "undefined") return
+      const res = await uploadReply(newReply, question.id)
+      if (res) {
+        setAddingReply(false)
+      } else {
+        Alert.alert("답변 제출 실패", "답변 제출이 불가능합니다")
+      }
+    }
     if (hasReply) return;
-    return ( // 아직 답변을 달지 않았다면
-      <View>
-        <View style={[styles.myCard, {marginTop: 100}]}>
+
+    const [newReply, setNewReply] = useState("");
+    if (addingReply) {
+      return (
+        <View>
           <TextInput
-            value={newReplyContent}
-            onChangeText={setNewReplyContent}
+            style={styles.myReplyInput}
+            value={newReply}
+            onChangeText={setNewReply}
             multiline
             placeholder="답변 내용을 입력해주세요"
             />
+          <Pressable style={styles.replyButton} onPress={postReply}>
+            <Text style={styles.replyButtonText}>답변 제출</Text>
+          </Pressable>
         </View>
-        <Pressable style={styles.selectButton}>
+      )
+    }
+    return ( // 아직 답변을 달지 않았다면
+        <Pressable style={styles.selectButton} onPress={nowAddingReply}>
           <Text style={styles.selectButtonText}>답변 달기</Text>
         </Pressable>
-      </View>
     )
   }
 
@@ -154,6 +175,7 @@ export default function QuestionDetailPage() {
       </View>
 
       <View>
+        {!addingReply ? 
         <FlatList
           data={replies}
           keyExtractor={(item) => item.id}
@@ -162,6 +184,9 @@ export default function QuestionDetailPage() {
           )}
           contentContainerStyle={styles.container}
         />
+        :
+        <View />
+        }
       </View>
         <ReplyInput />
       <View style={styles.footer}>
@@ -212,6 +237,14 @@ const styles = responsiveStyleSheet({
     alignItems: "center",
     justifyContent: "space-between"
   },
+  myReplyInput: {
+    backgroundColor: cardColor,
+    borderRadius: 5,
+    borderWidth: 1,
+    padding: 10,
+    marginTop: 50,
+    height: 200
+  },
   title: {
     fontSize: 16,
     fontWeight: "600",
@@ -242,6 +275,26 @@ const styles = responsiveStyleSheet({
     elevation: 3,
   },
   selectButtonText: {
+    color: bgColor,
+    fontSize: 13,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+  },
+  replyButton: {
+    marginTop: 30,
+    backgroundColor: primaryColor,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  replyButtonText: {
     color: bgColor,
     fontSize: 13,
     fontWeight: '500',

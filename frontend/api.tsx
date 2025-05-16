@@ -5,6 +5,7 @@ import * as SecureStore from 'expo-secure-store'
 const BASE_URL = "http://capstone-2025-27-backend.onrender.com";
 
 export async function userSignIn(user : USER) : Promise<USER | null> {
+  return user
   try {
     const response = await axios.post(`${BASE_URL}/auth/login`, {
       username: user.username,
@@ -15,35 +16,40 @@ export async function userSignIn(user : USER) : Promise<USER | null> {
     await SecureStore.setItemAsync("token", token);
 
     if (response.status === 401) return null
-    return exUser;
+    return response.data;
   } catch (error) {
       console.log("Error while login : ", error)
   }
   return null
 }
 export async function userSignUp(user : USER) : Promise<boolean> {
-    try {
-        const response = await axios.post(`${BASE_URL}/auth/signup`, {
-          email: user.email,
-          username: user.username,
-          password: user.password
-        }, {
-          withCredentials: true
-        })
-        return true;
-    } catch (error) {
-        console.log("Error while signUp : ")
-    }
-    return false // success true, fail false
+  return true;
+  try {
+      const response = await axios.post(`${BASE_URL}/auth/signup`, {
+        email: user.email,
+        username: user.username,
+        password: user.password
+      }, {
+        withCredentials: true
+      })
+      return true;
+  } catch (error) {
+      console.log("Error while signUp : ", error)
+  }
+  return false
 }
-// new app
+export async function getUser() {
+  return exUser
+  const data = await get(`user`, "getUser")
+  return data
+}
 
 declare global {
     interface USER {
         id: string,
         email: string,
         username: string,
-        password: string,
+        password?: string,
         points: number,
     }
     interface QUESTION {
@@ -143,28 +149,26 @@ async function set(URL: string, name: string, body: object) {
 }
 
 export async function getQuestions() {
+  return exQuestions
   const data = await get(`questions`, "getQuestions")
   return data
 }
 export async function getQuestionById(questionId: string) {
+  return exQuestion1
   const data = await get(`questions/${questionId}`, "getQuestionById")
   return data
 }
 export async function getQuestionReplies(questionId: string) {
+  return exReplies
   const data = await get(`replies/${questionId}`, "getQuestionReplies")
   return data
 }
-export function getUserQuestions(userId: string | null) {
-  var qs = []
-  for(var question of exQuestions) {
-    if (question.authorId == userId) {
-      qs.push(question)
-    }
-  }
-  return qs
+export async function getUserQuestions(userId: string | null) {
+  const data = await get(`questions/user`, "getUserQuestions")
+  return data
 }
-export function getUserReplyQuestions(userId: string) {
-    return exQuestions
+export async function getUserReplyQuestions(userId: string) {
+  const data = await get(`replies/user`, "getUserReplyQuestions")
 }
 export async function getQuestionsByQueryCategory(query: string, category: string) {
   try {
@@ -183,7 +187,7 @@ export async function getQuestionsByQueryCategory(query: string, category: strin
     if (response.status === 401) return null
     return response.data;
   } catch (error) {
-      console.log("Error : ", error)
+      console.log("Error from set: ", error)
   }
   return null
   
@@ -202,7 +206,7 @@ async function get(URL: string, name: string) {
     if (response.status === 401) return null
     return response.data;
   } catch (error) {
-      console.log("Error : ", error)
+      console.log("Error from get: ", error)
   }
   return null
 
