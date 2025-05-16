@@ -10,6 +10,7 @@ import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.QuestionRepository;
 import com.example.backend.repository.ReplyLikeRepository;
 import com.example.backend.repository.ReplyRepository;
+import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     // 질문의 답변들을 조회
     public List<ReplyResponseDto> getReplies(String questionId, String currentUserId) {
@@ -33,8 +35,22 @@ public class ReplyService {
                 .stream()
                 .map(reply -> new ReplyResponseDto(
                         reply,
+                        userRepository.findById(reply.getAuthorId()).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)).getUsername(),
                         reply.getId().equals(selectedId),
                         replyLikeRepository.existsByReplyIdAndUserId(reply.getId(), currentUserId)
+                        )
+                )
+                .toList();
+    }
+
+    public List<ReplyResponseDto> getRepliesByUserId(String userId) {
+        return replyRepository.findAllByAuthorIdOrderByCreatedTimeDesc(userId)
+                .stream()
+                .map(reply -> new ReplyResponseDto(
+                                reply,
+                                userRepository.findById(reply.getAuthorId()).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)).getUsername(),
+                                false,
+                                replyLikeRepository.existsByReplyIdAndUserId(reply.getId(), userId)
                         )
                 )
                 .toList();

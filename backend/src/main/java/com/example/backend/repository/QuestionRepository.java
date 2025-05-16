@@ -15,4 +15,10 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
     List<Question> findByCreateTimeBeforeOrderByCreateTimeDesc(LocalDateTime cursor, Pageable pageable);
 
     List<Question> findByCategoryOrderByCreateTimeDesc(String category);
+
+    List<Question> findAllByAuthorIdOrderByCreateTimeDesc(String authorId);
+
+    List<Question> findByTitleRegexIgnoreCaseAndCategoryOrderByCreateTimeDesc(String keyword, String category);
+
+    List<Question> findAllByOrderByCreateTimeDesc();
 }

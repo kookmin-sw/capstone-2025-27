@@ -2,16 +2,15 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.domain.User;
+import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping
@@ -30,5 +29,10 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("회원가입 실패: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(userService.findUserById(userDetails.getUserId()));
     }
 }
