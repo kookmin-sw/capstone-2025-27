@@ -11,14 +11,14 @@ const Payment = () => {
     IMP.init("imp41248503"); // 자신의 PortOne 가맹점 식별코드 입력
 
     const amount = params.get("amount");
-    // const name = params.get("name");
-    // const email = params.get("email");
-    // const phone = params.get("phone");
-    // const token = params.get('token');
-    const name = "홍길동";
-    const email = "test@gmail.com";
-    const phone = "01040133807";
-    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0iLCJpYXQiOjE3NDczODU0MjMsImV4cCI6MTc0NzM4OTAyM30.1LcSkQDSIs35-0ZIzxqreMYw9Tnzrm6NLa97imUdFk4";
+    const name = params.get("name");
+    const email = params.get("email");
+    const phone = params.get("phone");
+    const token = params.get('token');
+    // const name = "홍길동";
+    // const email = "test@gmail.com";
+    // const phone = "01040133807";
+    // const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0iLCJpYXQiOjE3NDczODU0MjMsImV4cCI6MTc0NzM4OTAyM30.1LcSkQDSIs35-0ZIzxqreMYw9Tnzrm6NLa97imUdFk4";
 
     IMP.request_pay(
       {
