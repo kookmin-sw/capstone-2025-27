@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from "react-native";
-import { getQuestionById, getQuestionReplies, uploadReply } from "@/api";
+import { getQuestionById, getQuestionReplies, setChosenReply, uploadReply } from "@/api";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "@/components/contexts/UserContext";
@@ -30,8 +30,13 @@ export default function QuestionDetailPage() {
     setSelectedAuthorId(authorId)
   };
 
-  const chooseReply = (replyId : string) => {
+  const chooseReply = async (replyId : string) => {
     console.log(replyId);
+    if (typeof question == "undefined") return
+    const res = await setChosenReply(question?.id, replyId)
+    if (res == false) {
+      Alert.alert("답변 채택 실패", "현상금 부여할 답변 채택을 실패하였습니다")
+    }
   }
 
   useEffect(() => {
@@ -73,14 +78,14 @@ export default function QuestionDetailPage() {
     // 내 답변일때
     return (
       <View style={isMyReply ? styles.myCard : styles.card}>
-        <View>
+        <View style={{flex: 1, flexShrink: 1}}>
           <Text style={styles.title}>{reply.authorId}</Text>
           <Text>{reply.content}</Text>
           <Text style={styles.meta}>
             등록일: {new Date(reply.createdTime).toLocaleDateString()}
           </Text>
         </View>
-          {isMyQuestion ?  <CheckBox reply={reply} /> : <View></View>}
+          {isMyQuestion ? <CheckBox reply={reply} /> : <View></View>}
           {isMyReply ? <Pressable style={styles.editCommentButton}>
             <Text style={styles.editCommentText}>수정</Text>
             </Pressable> : <View></View>}
@@ -221,7 +226,7 @@ const styles = responsiveStyleSheet({
     elevation: 2,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   myCard: {
     backgroundColor: cardColor,

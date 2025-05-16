@@ -59,7 +59,7 @@ export default function Purchase() {
         placeholder="현상금을 입력하세요"
         keyboardType="numeric"
       />
-      <Button color={secondaryColor} title="질문 등록" onPress={purchasePoints} />
+      <Button color={secondaryColor} title="포인트 구매" onPress={purchasePoints} />
       
     </GestureHandlerRootView>
   )

@@ -34,7 +34,7 @@ export async function userSignUp(user : USER) : Promise<boolean> {
       })
       return true;
   } catch (error) {
-      console.log("Error while signUp : ", error)
+    console.log("Error while signUp : ", error)
   }
   return false
 }
@@ -79,7 +79,7 @@ declare global {
 
 export const categories = [
   '추천', '법률', '가정', '의견',
-  '5', '6', '7', '8', '9', '10'
+  '현장', '육아', '응급처지', '8', '9', '10'
 ]
 
 export async function buyPoints(amount : number, email : string, name : string, phoneNumber: string) {
@@ -89,8 +89,25 @@ export async function buyPoints(amount : number, email : string, name : string, 
   const url = `https://capstone-2025-27-cashqna-payment-git-master-samjjng01s-projects.vercel.app/payment?amount=${a}&email=${email}&name${name}&phone=${phoneNumber}&token=${token}`
   WebBrowser.openBrowserAsync(url);
 }
-export function sellPoints(userId : string, amount : number) {
-    console.log("User:", userId, " selling ", amount, "points")
+export async function sellPoints(amount : number) {
+  try {
+    const token = await SecureStore.getItemAsync("token");
+    const response = await axios.post(`${BASE_URL}/withdraw`,
+      {
+        amount: amount
+      }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    console.log(`${name} status:`, response.status)
+    if (response.status === 401) return false
+    return true;
+  } catch (error) {
+      console.log(`Error : ${name}`, error)
+  }
+  return false
 }
 
 export async function uploadQuestion(question: QUESTION, user: USER) {
@@ -111,7 +128,7 @@ export async function uploadReply(replyContent: string, questionId: string) {
   })
   return response
 }
-export async function chooseReply(questionId: string, replyId: string) {
+export async function setChosenReply(questionId: string, replyId: string) {
   const response = await set(`questions/replies/reward`, "chooseReply", {
     questionId: questionId,
     replyId: replyId

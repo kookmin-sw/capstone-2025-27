@@ -23,7 +23,10 @@ export default function MyPage() {
     const { user } = useUser()
   
     function toPurchase() {
-      router.push("/(mycontent)/puchase")
+      router.push("/(mycontent)/purchase")
+    }
+    function toSell() {
+      router.push("/(mycontent)/sell")
     }
   
     if (user?.id == undefined) {
@@ -48,6 +51,7 @@ export default function MyPage() {
   
           <Pressable
             style={styles.button}
+            onPress={toSell}
           >
             <Text style={styles.buttonText}>포인트 판매</Text>
           </Pressable>
