@@ -18,12 +18,6 @@ export default function MyQuestions() {
     const qs = await getUserQuestions(user.username)
     setQuestions(qs)
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      getData()
-    }, [])
-  )
   useEffect(() => {
     // user questions들을 답변 완료와 답변 완료 아닌 것들로 나누면 좋을 거 같은데..
     // 여기서 for loop 돌려서 하면 되긴 하는데 api로 나누어 받는것이 빠르지 않을까?

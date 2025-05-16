@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, View, FlatList, StyleSheet, Pressable } from "react-native";
 import { getQuestions, getQuestionsByQueryCategory } from "@/api";
 import QuestionCard from "../../components/QuestionCard";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { secondaryColor } from "@/components/styles";
 import { useUser } from "@/components/contexts/UserContext";
@@ -16,15 +16,22 @@ export default function QuestionPage() {
   const [category, setCategory] = useState('All')
   const debouncedQuery = useDebounce(query, 300)
 
+  const [loadingData, setLoadingData] = useState<boolean>(true)
+
   const { user } = useUser()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const allQuestions = await getQuestions();
-      setQuestions(allQuestions);
-    };
-    fetchData();
-  }, []);
+  const fetchData = async () => {
+    const allQuestions = await getQuestions();
+    setQuestions(allQuestions);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData().then(() => {
+        setLoadingData(false)
+      })
+    },[])
+  )
 
   useEffect(() => {
     const shouldFetch = (debouncedQuery && debouncedQuery.length > 0) || category !== 'All';
@@ -37,6 +44,9 @@ export default function QuestionPage() {
     fetchData()
   }, [debouncedQuery, category])
 
+  if(loadingData) return (
+    <Text style={{textAlign: "center", paddingBlockStart: 200}}>Loading Data...</Text>
+  )
   return (
     <View style={styles.wrapper}>
       <SearchBar value={query} onChangeText={setQuery} selectedCategory={category} setSelectedCategory={setCategory} />

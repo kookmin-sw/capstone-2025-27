@@ -1,11 +1,11 @@
-import { buyPoints } from "@/api";
+import { buyPoints, getUser } from "@/api";
 import { useUser } from "@/components/contexts/UserContext";
 import Popup from "@/components/Popup";
 import { responsiveStyleSheet } from "@/components/responsive";
 import { bgColor, cardColor, primaryColor } from "@/components/styles";
 import UserQandACard from "@/components/UserQandACard";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Text, View, ScrollView, StyleSheet, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
@@ -17,6 +17,24 @@ export default function MyPage() {
     saveUser(null)
     router.push("/signIn")
   }
+
+  async function getData() {
+      const u = await getUser()
+      const saveU = {
+        id: u.username,
+        email: u.email,
+        username: u.username,
+        points: u.points,
+        password: "",
+      }
+      saveUser(null)
+      saveUser(saveU)
+  }
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [])
+  )
 
   function TransactionCard() {
   
