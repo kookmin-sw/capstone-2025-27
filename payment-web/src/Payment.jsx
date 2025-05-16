@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useRoutes, useSearchParams } from "react-router-dom";
 
 const Payment = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const IMP = window.IMP;
@@ -28,10 +29,10 @@ const Payment = () => {
       async (rsp) => {
         if (rsp.success) {
           // ✅ 결제 성공 → imp_uid로 백엔드 검증 요청
-          // const token = localStorage.getItem("token");
           try {
             await axios.post(
-              "http://localhost:8080/point/charge",
+              // "http://localhost:8080/point/charge",
+              "https://capstone-2025-27-backend.onrender.com/point/charge",
               { impUid: rsp.imp_uid },
               {
                 headers: {
@@ -40,12 +41,15 @@ const Payment = () => {
               }
             );
             alert("포인트 충전 성공!");
+            navigate("/Result?success=true");
           } catch (err) {
             console.error(err);
             alert("결제 실패: 백엔드 처리 중 오류 발생: " + err.response?.data?.message || "알 수 없는 오류");
+            navigate("/Result?success=false");
           }
         } else {
           alert("결제 실패: " + rsp.error_msg);
+          navigate("/Result?success=false");
         }
       }
     );
