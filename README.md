@@ -1,63 +1,44 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/gFPznrUY)
-# Welcome to GitHub
 
-캡스톤 팀 생성을 축하합니다.
+# CASHQ&A
 
-## 팀소개 및 페이지를 꾸며주세요.
+**Expo 앱 주소** -> 
 
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
+## 1. 프로잭트 소개
 
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
+“돈을 걸고 질문하세요, 전문가의 답변을 받으세요.”
+정보가 넘쳐나는시대, AI 검색으로도 중요한 의사결정에 신뢰할 만한 답변을 얻기 어렵습니다. 
+심지어 AI는 가끔 틀린 정보를 사실처럼 제시하기도 합니다.
+CASH Q&A는 질문에 **현상금(돈)**을 걸고, 그 질문을 본 전문 사용자들이 경쟁적으로 답변을 달아주는 서비스 입니다.
+질문자는 현상금을 통해 높은 신뢰도의 답변을 확보할 수 있고,
+답변자는 자신의 잉여 시간을 활용해 금전적 보상 획득할 수 있습니다.
 
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2023년 0조  https://kookmin-sw.github.io/capstone-2023-00/
+## 2. 소개 영상
 
 
-## 내용에 아래와 같은 내용들을 추가하세요.
+## 3. 팀 소개
 
-### 1. 프로잭트 소개
+### 박광열
 
-프로젝트
+### 임한
 
-### 2. 소개 영상
+## 4-1. 앱 사용법
+1. 모바일 앱 **Expo Go** 다운로드
+2. Expo 앱 속에서 다음 링크로 앱 열기:
+3. 앱 사용
 
-프로젝트 소개하는 영상을 추가하세요
+## 4-2. 앱 DEV 사용법
+1. 깃 리포지토리에서 코드 다운로드
+2. 아래 명령어들를 통해 프론트 파일로 이동 후 필요한 모듈 설치
+`cd frontend`
+`npm install`
+3. 아래 명령어들을 통해 스프링 부트 서버 시작
+``
+``
 
-### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
-
+## 5. 기타
 
 ## Markdown을 사용하여 내용꾸미기
 
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
 
 - Bulleted
 - List
@@ -68,10 +49,3 @@ Syntax highlighted code block
 **Bold** and _Italic_ and `Code` text
 
 [Link](url) and ![Image](src)
-```
-
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Support or Contact
-
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.

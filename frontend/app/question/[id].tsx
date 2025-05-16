@@ -14,6 +14,7 @@ export default function QuestionDetailPage() {
   const [replies, setReplies] = useState<Array<REPLY>>();
   const [selectedId, setSelectedId] = useState<string>();
 
+  const [loadingReply, setLoadingReply] = useState<boolean>(true)
   const [hasReply, setHasReply] = useState<boolean>(false); //유저가 해당 질문에 답한적 있는지 확인
   const [addingReply, setAddingReply] = useState<boolean>(false);
 
@@ -50,7 +51,7 @@ export default function QuestionDetailPage() {
         setIsMyQuestion(true)
       }
     }
-      fetchData();
+    fetchData().then(() => setLoadingReply(false))
   }, [id, addingReply]);
 
   if (!question) return <Text style={{textAlign: "center", paddingBlockStart: 200}}>Loading...</Text>;
@@ -149,6 +150,8 @@ export default function QuestionDetailPage() {
           </Pressable>
         </View>
       )
+    } else if (loadingReply) {
+      return (<View></View>)
     }
     return ( // 아직 답변을 달지 않았다면
         <Pressable style={styles.selectButton} onPress={nowAddingReply}>

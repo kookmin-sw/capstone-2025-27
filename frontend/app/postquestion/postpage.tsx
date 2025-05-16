@@ -65,13 +65,13 @@ export default function NewQuestionPage() {
         onValueChange={(chosen : any) => setQuestion((prev) => ({...prev, category: chosen}))}
         items={[
           { label: categories[0], value: categories[0]},
-          { label: categories[1], value: categories[0]},
-          { label: categories[2], value: categories[0]},
-          { label: categories[3], value: categories[0]},
-          { label: categories[4], value: categories[0]},
-          { label: categories[5], value: categories[0]},
-          { label: categories[6], value: categories[0]},
-          { label: categories[7], value: categories[0]},
+          { label: categories[1], value: categories[1]},
+          { label: categories[2], value: categories[2]},
+          { label: categories[3], value: categories[3]},
+          { label: categories[4], value: categories[4]},
+          { label: categories[5], value: categories[5]},
+          { label: categories[6], value: categories[6]},
+          { label: categories[7], value: categories[7]},
         ]}
       />
       <View style={styles.divider} />
