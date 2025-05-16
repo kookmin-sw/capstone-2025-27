@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.dto.LoginRequest;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.domain.User;
+import com.example.backend.dto.UserResponseDto;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.exception.ErrorCode;
 import com.example.backend.repository.UserRepository;
@@ -51,5 +52,9 @@ public class UserService {
         );
 
         return jwtUtil.generateToken(request.getUsername());
+    }
+
+    public UserResponseDto findUserById(String userId) {
+        return new UserResponseDto(userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)));
     }
 }
