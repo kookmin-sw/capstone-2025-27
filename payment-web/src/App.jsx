@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Payment from './Payment';
 import Result from './Result';
+import PaymentVerify from './PaymentVerify';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/payment" element={<Payment />} />
         <Route path="/result" element={<Result />} />
+        <Route path="paymentverify" element={<PaymentVerify />} />
       </Routes>
 
   )
