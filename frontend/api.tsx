@@ -90,7 +90,6 @@ export async function buyPoints(amount : number, email : string, name : string, 
   WebBrowser.openBrowserAsync(url);
 }
 export async function sellPoints(amount : number) {
-  console.log("check")
   try {
     const token = await SecureStore.getItemAsync("token");
     const response = await axios.post(`${BASE_URL}/point/withdraw`,
@@ -130,7 +129,7 @@ export async function uploadReply(replyContent: string, questionId: string) {
   return response
 }
 export async function setChosenReply(questionId: string, replyId: string) {
-  const response = await set(`questions/replies/reward`, "chooseReply", {
+  const response = await set(`questions/answers/reward`, "setChosenReply", {
     questionId: questionId,
     replyId: replyId
   })
@@ -139,6 +138,7 @@ export async function setChosenReply(questionId: string, replyId: string) {
 
 async function set(URL: string, name: string, body: object) {
   try {
+    console.log(URL, body)
     const token = await SecureStore.getItemAsync("token");
     const response = await axios.post(`${BASE_URL}/${URL}`,
       body, {
@@ -177,11 +177,12 @@ export async function getUserReplyQuestions(userId: string) {
 }
 export async function getQuestionsByQueryCategory(query: string, category: string) {
   try {
+    if (category == "ALL") category = ""
     const token = await SecureStore.getItemAsync("token");
     const response = await axios.get(`${BASE_URL}/questions/search`, {
       params: {
         category: category,
-        keyword: query 
+        keyword: encodeURIComponent(query) 
       },
       headers: {
         Authorization: `Bearer ${token}`,
@@ -190,6 +191,7 @@ export async function getQuestionsByQueryCategory(query: string, category: strin
 
     console.log(`getQuestionsByQueryCategory status: `, response.status)
     if (response.status === 401) return null
+    console.log(response.data)
     return response.data;
   } catch (error) {
       console.log(`Error from getQuestionByQueryCategory: `, error)

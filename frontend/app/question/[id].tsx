@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from "react-native";
-import { getQuestionById, getQuestionReplies, setChosenReply, uploadReply } from "@/api";
+import { getQuestionById, getQuestionReplies, getUser, setChosenReply, uploadReply } from "@/api";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "@/components/contexts/UserContext";
@@ -22,15 +22,16 @@ export default function QuestionDetailPage() {
   const [isMyQuestion, setIsMyQuestion] = useState<boolean>(false)
 
   const [selectedAuthorId, setSelectedAuthorId] = useState('')
+  const [done, setDone] = useState(false)
 
   const router = useRouter()
-  
-  const toggleSelect = (replyId : string, authorId : string) => {
+
+  const toggleSelect = (replyId: string, authorId: string) => {
     setSelectedId(replyId);
     setSelectedAuthorId(authorId)
   };
 
-  const chooseReply = async (replyId : string) => {
+  const chooseReply = async (replyId: string) => {
     console.log(replyId);
     if (typeof question == "undefined") return
     const res = await setChosenReply(question?.id, replyId)
@@ -43,11 +44,11 @@ export default function QuestionDetailPage() {
     if (typeof id !== "string") return
 
     const fetchData = async () => {
-      const question =  await getQuestionById(id)
-      if(question == undefined) return null
+      const question = await getQuestionById(id)
+      if (question == undefined) return null
 
       setQuestion(question)
-      navigation.setOptions({ title : question.title })
+      navigation.setOptions({ title: question.title })
 
       const replies = await getQuestionReplies(question.id)
       setReplies(replies)
@@ -55,16 +56,19 @@ export default function QuestionDetailPage() {
       if (user?.id === question.authorId) {
         setIsMyQuestion(true)
       }
+      if (question.selectedAnswerId) {
+        setDone(true)
+      }
     }
     fetchData().then(() => setLoadingReply(false))
   }, [id, addingReply]);
 
-  if (!question) return <Text style={{textAlign: "center", paddingBlockStart: 200}}>Loading...</Text>;
+  if (!question) return <Text style={{ textAlign: "center", paddingBlockStart: 200 }}>Loading...</Text>;
 
   type RCProps = {
     reply: REPLY
   }
-  function ReplyCard({ reply } : RCProps) {
+  function ReplyCard({ reply }: RCProps) {
     const [isMyReply, setIsMyReply] = useState<boolean>(false)
 
     useEffect(() => {
@@ -78,22 +82,22 @@ export default function QuestionDetailPage() {
     // 내 답변일때
     return (
       <View style={isMyReply ? styles.myCard : styles.card}>
-        <View style={{flex: 1, flexShrink: 1}}>
+        <View style={{ flex: 1, flexShrink: 1 }}>
           <Text style={styles.title}>{reply.authorId}</Text>
           <Text>{reply.content}</Text>
           <Text style={styles.meta}>
             등록일: {new Date(reply.createdTime).toLocaleDateString()}
           </Text>
         </View>
-          {isMyQuestion ? <CheckBox reply={reply} /> : <View></View>}
-          {isMyReply ? <Pressable style={styles.editCommentButton}>
-            <Text style={styles.editCommentText}>수정</Text>
-            </Pressable> : <View></View>}
+        {isMyQuestion && !done ? <CheckBox reply={reply} /> : <View></View>}
+        {isMyReply ? <Pressable style={styles.editCommentButton}>
+          <Text style={styles.editCommentText}>수정</Text>
+        </Pressable> : <View></View>}
       </View>
     )
   }
 
-  function CheckBox({ reply } : RCProps) {
+  function CheckBox({ reply }: RCProps) {
     const [selected, setSelected] = useState(false);
     useEffect(() => {
       if (selectedId == reply.id) {
@@ -105,9 +109,9 @@ export default function QuestionDetailPage() {
     return (
       <Pressable onPress={() => toggleSelect(reply.id, reply.authorId)} style={styles.checkboxWrapper}>
         <Ionicons
-        name={selected ? 'checkbox' : 'square-outline'}
-        size={32}
-        color={primaryColor}
+          name={selected ? 'checkbox' : 'square-outline'}
+          size={32}
+          color={primaryColor}
         />
       </Pressable>
     )
@@ -116,6 +120,7 @@ export default function QuestionDetailPage() {
   // 선택 버튼 (답변 선택용)
   function SelectAnswer() {
     if (selectedId == null || !isMyQuestion) return
+    if (done) return
     return (
       <Pressable onPress={() => chooseReply(selectedId)} style={styles.selectButton}>
         <Text style={styles.selectButtonText}>{selectedAuthorId}에게 현상금 보상하기</Text>
@@ -149,7 +154,7 @@ export default function QuestionDetailPage() {
             onChangeText={setNewReply}
             multiline
             placeholder="답변 내용을 입력해주세요"
-            />
+          />
           <Pressable style={styles.replyButton} onPress={postReply}>
             <Text style={styles.replyButtonText}>답변 제출</Text>
           </Pressable>
@@ -159,22 +164,37 @@ export default function QuestionDetailPage() {
       return (<View></View>)
     }
     return ( // 아직 답변을 달지 않았다면
-        <Pressable style={styles.selectButton} onPress={nowAddingReply}>
-          <Text style={styles.selectButtonText}>답변 달기</Text>
-        </Pressable>
+      <Pressable style={styles.selectButton} onPress={nowAddingReply}>
+        <Text style={styles.selectButtonText}>답변 달기</Text>
+      </Pressable>
+    )
+  }
+
+  function ChosenUser() {
+    const [replyUsername, setReplyUsername] = useState("")
+    // async function fetchReplyUser() {
+    //   await (question?.selectedAnswerId)
+    // }
+    useEffect(() => {
+      if (question?.selectedAnswerId == null) return
+      if (typeof question.selectedAnswerId == "undefined") return
+      setReplyUsername(question?.selectedAnswerId)
+    })
+    return (
+      <Text></Text>
     )
   }
 
   return (
-    <KeyboardAvoidingView style={[styles.questionContainer, {flex: 1}]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={[styles.questionContainer, { flex: 1 }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View>
-        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={contentStyles.categoryTag}>
             <Text style={contentStyles.categoryText}>{question.category}</Text>
           </View>
           <Text style={contentStyles.reward}>{question.reward}P</Text>
         </View>
-          <Text style={contentStyles.title}>{question.title}</Text>
+        <Text style={contentStyles.title}>{question.title}</Text>
 
 
 
@@ -182,20 +202,25 @@ export default function QuestionDetailPage() {
       </View>
 
       <View>
-        {!addingReply ? 
-        <FlatList
-          data={replies}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+        {done ?
+          <View>
+            <ChosenUser />
+          </View>
+          : <View></View>}
+        {!addingReply ?
+          <FlatList
+            data={replies}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
               <ReplyCard reply={item} />
-          )}
-          contentContainerStyle={styles.container}
-        />
-        :
-        <View />
+            )}
+            contentContainerStyle={styles.container}
+          />
+          :
+          <View />
         }
       </View>
-        {isMyQuestion ? <View></View> : <ReplyInput />}
+      {isMyQuestion ? <View></View> : <ReplyInput />}
       <View style={styles.footer}>
         <SelectAnswer />
       </View>
@@ -321,7 +346,7 @@ const styles = responsiveStyleSheet({
     color: bgColor,
   }
 });
-  
+
 
 const contentStyles = StyleSheet.create({
 

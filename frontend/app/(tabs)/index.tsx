@@ -34,7 +34,7 @@ export default function QuestionPage() {
   )
 
   useEffect(() => {
-    const shouldFetch = (debouncedQuery && debouncedQuery.length > 0) || category !== 'All';
+    const shouldFetch = (debouncedQuery && debouncedQuery.length > 0) || category !== 'ALL';
 
     if (!shouldFetch) return;
     const fetchData = async () => {
