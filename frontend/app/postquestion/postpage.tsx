@@ -72,6 +72,8 @@ export default function NewQuestionPage() {
           { label: categories[5], value: categories[5]},
           { label: categories[6], value: categories[6]},
           { label: categories[7], value: categories[7]},
+          { label: categories[8], value: categories[8]},
+          { label: categories[9], value: categories[9]},
         ]}
       />
       <View style={styles.divider} />

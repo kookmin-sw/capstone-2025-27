@@ -71,7 +71,7 @@ export default function MyPage() {
             style={styles.button}
             onPress={toSell}
           >
-            <Text style={styles.buttonText}>포인트 판매</Text>
+            <Text style={styles.buttonText}>포인트 환전</Text>
           </Pressable>
         </View>
       </View>

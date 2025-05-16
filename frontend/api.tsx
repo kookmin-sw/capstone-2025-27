@@ -78,8 +78,8 @@ declare global {
 }
 
 export const categories = [
-  '추천', '법률', '가정', '의견',
-  '현장', '육아', '응급처지', '8', '9', '10'
+  'ALL', '법률', '가정', '의견',
+  '현장', '육아', '응급처지', '추천', '진로', '지식'
 ]
 
 export async function buyPoints(amount : number, email : string, name : string, phoneNumber: string) {
@@ -90,9 +90,10 @@ export async function buyPoints(amount : number, email : string, name : string, 
   WebBrowser.openBrowserAsync(url);
 }
 export async function sellPoints(amount : number) {
+  console.log("check")
   try {
     const token = await SecureStore.getItemAsync("token");
-    const response = await axios.post(`${BASE_URL}/withdraw`,
+    const response = await axios.post(`${BASE_URL}/point/withdraw`,
       {
         amount: amount
       }, {
@@ -101,11 +102,11 @@ export async function sellPoints(amount : number) {
       },
     })
 
-    console.log(`${name} status:`, response.status)
+    console.log(`sellPoints status:`, response.headers)
     if (response.status === 401) return false
     return true;
   } catch (error) {
-      console.log(`Error : ${name}`, error)
+      console.log(`Error : sellPoints`, error)
   }
   return false
 }
@@ -187,11 +188,11 @@ export async function getQuestionsByQueryCategory(query: string, category: strin
       },
     })
 
-    console.log(`${name} status: `, response.status)
+    console.log(`getQuestionsByQueryCategory status: `, response.status)
     if (response.status === 401) return null
     return response.data;
   } catch (error) {
-      console.log(`Error from set: `, error)
+      console.log(`Error from getQuestionByQueryCategory: `, error)
   }
   return null
 }

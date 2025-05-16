@@ -1,8 +1,9 @@
 import { sellPoints } from "@/api";
 import { responsiveStyleSheet } from "@/components/responsive";
 import { secondaryColor } from "@/components/styles";
+import { router } from "expo-router";
 import { useState } from "react";
-import { Button } from "react-native";
+import { Alert, Button } from "react-native";
 import { Text } from "react-native";
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 
@@ -10,7 +11,11 @@ export default function Sell() {
   const [chosenPoints, setChosenPoints] = useState(0)
 
   async function sPoints() {
-    sellPoints(chosenPoints)
+    const response = await sellPoints(chosenPoints)
+    if (response) router.push("/(tabs)/mypage")
+    else {
+      Alert.alert("환전 실패", "포인트 환전을 실패하였습니다")
+    }
   }
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -24,7 +29,7 @@ export default function Sell() {
           else setChosenPoints(num)
         }}
         />
-        <Button color={secondaryColor} title="포인트 판매" onPress={sPoints} />
+        <Button color={secondaryColor} title="포인트 환전" onPress={sPoints} />
     </GestureHandlerRootView>
   )
 }
