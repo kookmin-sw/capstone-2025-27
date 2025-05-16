@@ -22,11 +22,10 @@ import java.util.Map;
 public class ReplyController {
     private final ReplyService replyService;
 
-    @Operation(summary = "질문에 달린 답변 모두 조회", description = "질문 id로 질문에 달린 답변을 모두 조회")
-    @GetMapping("/{questionId}")
-    public ResponseEntity<List<ReplyResponseDto>> getReplies(@PathVariable String questionId, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(replyService.getReplies(questionId, userDetails.getUserId()));
-    }
+//    @GetMapping("/{replyId}")
+//    public ResponseEntity<?> getReplyById(@PathVariable String replyId) {
+//        return ResponseEntity.ok(replyService.ge)
+//    }
 
     @Operation(summary = "유저가 남긴 답변 모두 조회", description = "user id로 답변 모두 조회")
     @GetMapping("/user")

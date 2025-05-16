@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.QuestionInfoResponseDto;
 import com.example.backend.dto.QuestionRequestDto;
 import com.example.backend.dto.QuestionResponseDto;
 import com.example.backend.domain.Question;
@@ -61,7 +62,7 @@ public class QuestionService {
     }
 
     // 질문 검색 by question id
-    public QuestionResponseDto getQuestion(String questionId) {
+    public QuestionInfoResponseDto getQuestion(String questionId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.QUESTION_NOT_FOUND));
 
@@ -69,7 +70,10 @@ public class QuestionService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
                 .getUsername();
 
-        return new QuestionResponseDto(question, authorName);
+        Reply selectedReply = replyRepository.findById(question.getSelectedAnswerId()).orElseThrow();
+        String selectedReplyAuthorName = userRepository.findById(selectedReply.getAuthorId()).orElseThrow().getUsername();
+
+        return new QuestionInfoResponseDto(question, authorName, selectedReplyAuthorName);
     }
 
     // 유저 아이디로 생성한 질문 모두 가져오기

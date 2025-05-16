@@ -11,19 +11,20 @@ const Payment = () => {
     IMP.init("imp41248503"); // PortOne 가맹점 식별코드
 
     const amount = params.get("amount");
-    const name = params.get("name");
-    const email = params.get("email");
-    const phone = params.get("phone");
-    const token = params.get('token');
+    // const name = params.get("name");
+    // const email = params.get("email");
+    // const phone = params.get("phone");
+    // const token = params.get('token');
     // test code
-    // const name = "홍길동";
-    // const email = "test@gmail.com";
-    // const phone = "01040133807";
-    // const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0iLCJpYXQiOjE3NDczODU0MjMsImV4cCI6MTc0NzM4OTAyM30.1LcSkQDSIs35-0ZIzxqreMYw9Tnzrm6NLa97imUdFk4";
+    const name = "홍길동";
+    const email = "test@gmail.com";
+    const phone = "01040133807";
+    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0iLCJpYXQiOjE3NDc0MDU1MDEsImV4cCI6MTc0NzQwOTEwMX0.dzs_YbwRXrJz3FodFgNYAv2ZYUv01HRsvc8tBskmXLA";
 
     IMP.request_pay(
       {
-        pg: "kakaopay", // 결제 PG사
+        // pg: "kakaopay", // 결제 PG사
+        channelKey: "channel-key-885f6486-c952-48d5-b0d8-cccb0d334eb0",
         pay_method: "card",
         amount: amount || 1000,
         name: "포인트 충전",
@@ -38,8 +39,8 @@ const Payment = () => {
           // 결제 성공 → imp_uid로 백엔드 검증 요청
           try {
             await axios.post(
-              // "http://localhost:8080/point/charge",
-              "https://capstone-2025-27-backend.onrender.com/point/charge",
+              "http://localhost:8080/point/charge",
+              // "https://capstone-2025-27-backend.onrender.com/point/charge",
               { impUid: rsp.imp_uid },
               {
                 headers: {

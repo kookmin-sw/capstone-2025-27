@@ -1,9 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.QuestionRequestDto;
+import com.example.backend.dto.ReplyResponseDto;
 import com.example.backend.dto.RewardRequestDto;
 import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.QuestionService;
+import com.example.backend.service.ReplyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -24,6 +27,7 @@ import java.util.Map;
 @Tag(name = "Question", description = "질문글 관련 API")
 public class QuestionController {
     private final QuestionService questionService;
+    private final ReplyService replyService;
 
     @Operation(summary = "질문글 생성", description = "새로운 질문을 생성")
     @PostMapping
@@ -58,6 +62,12 @@ public class QuestionController {
     public ResponseEntity<?> deleteQuestion(@PathVariable String id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         questionService.deleteQuestion(id, userDetails.getUserId());
         return ResponseEntity.ok(Map.of("message", "질문이 삭제되었습니다."));
+    }
+
+    @Operation(summary = "질문에 달린 답변 모두 조회", description = "질문 id로 질문에 달린 답변을 모두 조회")
+    @GetMapping("/{questionId}/replies")
+    public ResponseEntity<List<ReplyResponseDto>> getReplies(@PathVariable String questionId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(replyService.getReplies(questionId, userDetails.getUserId()));
     }
 
     @Operation(summary = "답변 채택", description = "채택된 답변에 보상을 지급")

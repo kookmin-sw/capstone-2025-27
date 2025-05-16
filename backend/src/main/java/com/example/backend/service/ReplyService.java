@@ -43,6 +43,17 @@ public class ReplyService {
                 .toList();
     }
 
+//    //답변 아이디로 답변 조회
+//    public ReplyResponseDto getReplyByReplyId(String replyId) {
+//        Reply reply = replyRepository.findById(replyId).orElseThrow();
+//        return new ReplyResponseDto(
+//                reply,
+//                userRepository.findById(reply.getAuthorId()).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND)).getUsername(),
+//                replyLikeRepository.existsByReplyIdAndUserId(reply.getId(), )
+//                );
+//    }
+
+
     public List<ReplyResponseDto> getRepliesByUserId(String userId) {
         return replyRepository.findAllByAuthorIdOrderByCreatedTimeDesc(userId)
                 .stream()
