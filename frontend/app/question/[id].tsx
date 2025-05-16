@@ -51,7 +51,7 @@ export default function QuestionDetailPage() {
       }
     }
       fetchData();
-  }, [id]);
+  }, [id, addingReply]);
 
   if (!question) return <Text style={{textAlign: "center", paddingBlockStart: 200}}>Loading...</Text>;
 
@@ -63,11 +63,10 @@ export default function QuestionDetailPage() {
 
     useEffect(() => {
       if (reply.authorId == user?.id) {
-        console.log("reply: ", reply.authorId, "user: ", user.id)
         setIsMyReply(true)
         setHasReply(true)
       }
-    }, [addingReply])
+    }, [])
 
     // 답변 카드
     // 내 답변일때

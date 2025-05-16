@@ -107,13 +107,15 @@ export function sellPoints(userId : string, amount : number) {
 }
 
 export async function uploadQuestion(question: QUESTION, user: USER) {
-  const response = await set("questions", "uploadQuestions", {
+  const uploadData = {
     title: question.title,
     category: question.category,
     content: question.content,
     reward: question.reward,
-    deadline: question.deadline
-  })
+    deadline: question.deadline.toISOString().slice(0, 19)
+  }
+  console.log("api", uploadData)
+  const response = await set("questions", "uploadQuestions", uploadData)
   return response
 }
 export async function uploadReply(replyContent: string, questionId: string) {
