@@ -1,7 +1,7 @@
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { View, Text, FlatList, StyleSheet, Pressable, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { getQuestionById, getQuestionReplies, getUser, setChosenReply, uploadReply } from "@/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "@/components/contexts/UserContext";
 import { responsiveStyleSheet } from "@/components/responsive";
@@ -172,16 +172,17 @@ export default function QuestionDetailPage() {
 
   function ChosenUser() {
     const [replyUsername, setReplyUsername] = useState("")
-    // async function fetchReplyUser() {
-    //   await (question?.selectedAnswerId)
-    // }
-    useEffect(() => {
-      if (question?.selectedAnswerId == null) return
-      if (typeof question.selectedAnswerId == "undefined") return
-      setReplyUsername(question?.selectedAnswerId)
-    })
+
+    useFocusEffect(
+      useCallback(() => {
+        if (question?.selectedAnswerAuthorId == null) return
+        if (typeof question.selectedAnswerAuthorId == "undefined") return
+        setReplyUsername(question?.selectedAnswerAuthorId)
+        console.log(replyUsername)
+      }, [])
+    )
     return (
-      <Text></Text>
+      <Text>{question?.selectedAnswerAuthorId}</Text>
     )
   }
 

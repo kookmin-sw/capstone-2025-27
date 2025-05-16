@@ -2,12 +2,17 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity
 import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import { userSignUp, exUser } from "../api"
+import { userSignUp } from "../api"
 import AppIcon from "@/components/AppIcon";
 
 export default function SignUp() {
 
-  const [user, setUser] = useState<USER>(exUser);
+  const [user, setUser] = useState<USER>({
+    email: "",
+    username: "",
+    id: "",
+    points: 0
+  });
   const router = useRouter()
 
   const login = async () : Promise<boolean> => {

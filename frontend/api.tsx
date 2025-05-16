@@ -66,6 +66,7 @@ declare global {
         createdTime: Date,
         deadline: Date,
         selectedAnswerId: string | null,
+        selectedAnswerAuthorId: string | null,
         autoSelected: boolean,
     }
     interface REPLY {
@@ -165,7 +166,7 @@ export async function getQuestionById(questionId: string) {
   return data
 }
 export async function getQuestionReplies(questionId: string) {
-  const data = await get(`replies/${questionId}`, "getQuestionReplies")
+  const data = await get(`questions/${questionId}/replies`, "getQuestionReplies")
   return data
 }
 export async function getUserQuestions(userId: string | null) {
@@ -216,134 +217,3 @@ async function get(URL: string, name: string) {
   }
   return null
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const exUser : USER = {
-  id: "bobthebuilder",
-  username: "bobthebuilder",
-  email: "joshuahanlim777@gmail.com",
-  password: "11111",
-  points: 2000,
-}
-const exQuestion1 : QUESTION = {
-  authorId: "steve hawking",
-  title: "빠른 답변 부탁드립니다",
-  category: "과학",
-  content: "What is the radius of the Earth?",
-  reward: 5000,
-  createdTime: new Date(2025, 3, 15),
-  deadline: new Date(2025, 4, 15),
-  id: "24321",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exQuestion2 : QUESTION = {
-  authorId: "stephan curry",
-  title: "제발 아무나 도와주세요",
-  category: "부엌",
-  content: "라면 끓일 때 면 먼저 넣나요 가루 먼저 넣나요",
-  reward: 10000,
-  createdTime: new Date(2025, 3, 25),
-  deadline: new Date(2025, 4, 25),
-  id: "24226",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exQuestion3 : QUESTION = {
-  authorId: "bobthebuilder",
-  title: "정말 AI 못미더워서 물어봅니다",
-  category: "과학",
-  content: "지구가 평평하다는 얘기는 사실인가요?",
-  reward: 300,
-  createdTime: new Date(2025, 3, 27),
-  deadline: new Date(2025, 4, 22),
-  id: "24396",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exQuestion4 : QUESTION = {
-  authorId: "bobthebuilder",
-  title: "이건 뭐가 뭔가요",
-  category: "IT",
-  content: "운영체제는 왜 여러개 있는거죠? 맥북은 운영체제인가요?",
-  reward: 5000,
-  createdTime: new Date(2025, 4, 1),
-  deadline: new Date(2025, 4, 23),
-  id: "29873",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exQuestion5 : QUESTION = {
-  authorId: "anotherUser",
-  title: "미싱하는데 연기나는건 뭔가요",
-  category: "가전",
-  content: "지구가 평평하다는 얘기는 사실인가요?",
-  reward: 20000,
-  createdTime: new Date(2025, 4, 1),
-  deadline: new Date(2025, 4, 23),
-  id: "28573",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exQuestion6 : QUESTION = {
-  authorId: "anotherUser",
-  title: "세탁기 돌릴 때 부서지는 소리",
-  category: "가전",
-  content: "세탁기가 돌아갈 때 마다 부서지는 소리가 나는데 정상인가요? 어떻게 고치는거죠?",
-  reward: 30000,
-  createdTime: new Date(2025, 4, 10),
-  deadline: new Date(2025, 4, 30),
-  id: "24378",
-  selectedAnswerId: null,
-  autoSelected: false
-}
-const exReply1 : REPLY = {
-  authorId: "13621",
-  questionId: "24321",
-  id: "315623",
-  content: "The radius of Earth is something",
-  createdTime: new Date(2025, 3, 18)
-}
-const exReply2 : REPLY = {
-  authorId: "otherguy",
-  questionId: "24321",
-  id: "37258",
-  content: "probably something like 12345km",
-  createdTime: new Date(2025, 3, 19)
-}
-const exQuestions = [exQuestion1, exQuestion2, exQuestion3, exQuestion4, exQuestion5, exQuestion6]
-const exReplies = [exReply1, exReply2]

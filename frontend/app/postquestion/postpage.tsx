@@ -25,7 +25,8 @@ export default function NewQuestionPage() {
     createdTime: new Date(),
     deadline: new Date(),
     selectedAnswerId: null,
-    autoSelected: false
+    selectedAnswerAuthorId: null,
+    autoSelected: false,
   })
 
   function minReward() {

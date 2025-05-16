@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TextInput, StyleSheet, Button, TouchableOpacity
 import { authStyles, unitPixel } from "@/components/styles";
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
-import { userSignIn, exUser, getUser } from "../api"
+import { userSignIn, getUser } from "../api"
 import { useUser } from "@/components/contexts/UserContext";
 import AppIcon from "@/components/AppIcon";
 
