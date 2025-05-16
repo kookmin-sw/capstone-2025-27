@@ -8,13 +8,14 @@ const Payment = () => {
 
   useEffect(() => {
     const IMP = window.IMP;
-    IMP.init("imp41248503"); // 자신의 PortOne 가맹점 식별코드 입력
+    IMP.init("imp41248503"); // PortOne 가맹점 식별코드
 
     const amount = params.get("amount");
     const name = params.get("name");
     const email = params.get("email");
     const phone = params.get("phone");
     const token = params.get('token');
+    // test code
     // const name = "홍길동";
     // const email = "test@gmail.com";
     // const phone = "01040133807";
@@ -29,8 +30,9 @@ const Payment = () => {
         buyer_email: email,
         buyer_name: name,
         buyer_tel: phone,
-        m_redirect_url: "https://capstone-2025-27-cashqna-payment.vercel.app/result?success=true",
+        m_redirect_url: `https://capstone-2025-27-cashqna-payment.vercel.app/payment-verify?token=${token}` // 모바일 사용시
       },
+      // webBrowser 사용시
       async (rsp) => {
         if (rsp.success) {
           // 결제 성공 → imp_uid로 백엔드 검증 요청
