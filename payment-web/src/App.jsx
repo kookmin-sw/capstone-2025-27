@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/payment" element={<Payment />} />
         <Route path="/result" element={<Result />} />
-        <Route path="paymentverify" element={<PaymentVerify />} />
+        <Route path="/payment-verify" element={<PaymentVerify />} />
       </Routes>
 
   )
