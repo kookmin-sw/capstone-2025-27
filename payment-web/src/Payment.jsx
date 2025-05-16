@@ -1,5 +1,6 @@
+import axios from "axios";
 import { useEffect } from "react";
-import { useNavigate, useRoutes, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Payment = () => {
   const [params] = useSearchParams();
@@ -10,10 +11,14 @@ const Payment = () => {
     IMP.init("imp41248503"); // 자신의 PortOne 가맹점 식별코드 입력
 
     const amount = params.get("amount");
-    const name = params.get("name");
-    const email = params.get("email");
-    const phone = params.get("phone");
-    const token = params.get('token');
+    // const name = params.get("name");
+    // const email = params.get("email");
+    // const phone = params.get("phone");
+    // const token = params.get('token');
+    const name = "홍길동";
+    const email = "test@gmail.com";
+    const phone = "01040133807";
+    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0iLCJpYXQiOjE3NDczODU0MjMsImV4cCI6MTc0NzM4OTAyM30.1LcSkQDSIs35-0ZIzxqreMYw9Tnzrm6NLa97imUdFk4";
 
     IMP.request_pay(
       {
@@ -24,11 +29,11 @@ const Payment = () => {
         buyer_email: email,
         buyer_name: name,
         buyer_tel: phone,
-        m_redirect_url: "https://expo.dev/@yourname/yourapp/--/payment-result",
+        // m_redirect_url: "https://expo.dev/@yourname/yourapp/--/payment-result",
       },
       async (rsp) => {
         if (rsp.success) {
-          // ✅ 결제 성공 → imp_uid로 백엔드 검증 요청
+          // 결제 성공 → imp_uid로 백엔드 검증 요청
           try {
             await axios.post(
               // "http://localhost:8080/point/charge",
@@ -43,7 +48,7 @@ const Payment = () => {
             alert("포인트 충전 성공!");
             navigate("/Result?success=true");
           } catch (err) {
-            console.error(err);
+            console.log(err);
             alert("결제 실패: 백엔드 처리 중 오류 발생: " + err.response?.data?.message || "알 수 없는 오류");
             navigate("/Result?success=false");
           }
@@ -53,7 +58,7 @@ const Payment = () => {
         }
       }
     );
-  }, [params]);
+  }, [params, navigate]);
 
   return <div>결제 준비 중입니다...</div>;
 };
