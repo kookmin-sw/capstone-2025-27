@@ -95,7 +95,7 @@ export default function NewQuestionPage() {
         style={styles.rewardInput}
         value={question.reward.toString() || ''}
         onChangeText={(text) => {
-          const num = parseFloat(text);
+          const num = parseInt(text);
           if (isNaN(num)) {
             setQuestion((prev) => ({...prev, reward: (0)}))
           } else {

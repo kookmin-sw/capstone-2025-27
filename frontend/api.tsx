@@ -1,6 +1,8 @@
 
 import axios from "axios"
 import * as SecureStore from 'expo-secure-store'
+import dayjs from 'dayjs'
+import * as WebBrowser from 'expo-web-browser'
 
 const BASE_URL = "https://capstone-2025-27-backend.onrender.com";
 
@@ -80,27 +82,12 @@ export const categories = [
   '5', '6', '7', '8', '9', '10'
 ]
 
-export async function buyPoints(rsp : any) {
+export async function buyPoints(amount : number, email : string, name : string, phoneNumber: string) {
+  var a : number | null = amount
+  if (a == 0) a = null
   const token = await SecureStore.getItemAsync("token");
-
-  try {
-    await axios.post(
-      `${BASE_URL}/point/charge`,
-      { impUid: rsp.imp_uid },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    alert('포인트 충전 성공!');
-  } catch (err: any) {
-    console.error(err);
-    alert(
-      '결제 실패: 백엔드 처리 중 오류 발생: ' +
-        (err.response?.data?.message || '알 수 없는 오류')
-    );
-  }
+  const url = `https://capstone-2025-27-cashqna-payment-git-master-samjjng01s-projects.vercel.app/payment?amount=${a}&email=${email}&name${name}&phone=${phoneNumber}&token=${token}`
+  WebBrowser.openBrowserAsync(url);
 }
 export function sellPoints(userId : string, amount : number) {
     console.log("User:", userId, " selling ", amount, "points")
@@ -112,9 +99,8 @@ export async function uploadQuestion(question: QUESTION, user: USER) {
     category: question.category,
     content: question.content,
     reward: question.reward,
-    deadline: question.deadline.toISOString().slice(0, 19)
+    deadline: dayjs(question.deadline).format('YYYY-MM-DDTHH:mm:ss')
   }
-  console.log("api", uploadData)
   const response = await set("questions", "uploadQuestions", uploadData)
   return response
 }

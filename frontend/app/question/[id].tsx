@@ -190,7 +190,7 @@ export default function QuestionDetailPage() {
         <View />
         }
       </View>
-        <ReplyInput />
+        {isMyQuestion ? <View></View> : <ReplyInput />}
       <View style={styles.footer}>
         <SelectAnswer />
       </View>
