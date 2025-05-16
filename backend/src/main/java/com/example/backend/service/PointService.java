@@ -30,7 +30,6 @@ public class PointService {
     public void chargePoint(String userId, String impUid) {
         // imp_uid 로 결제 검증 + 정보 추출
         JsonNode paymentInfo = portOneClient.verifyPayment(impUid);
-//        log.warn(paymentInfo.toString());
         Long amount = paymentInfo.path("amount").asLong();
         String status = paymentInfo.path("status").asText();
 

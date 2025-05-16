@@ -8,7 +8,6 @@ import Result from './Result';
 function App() {
 
   return (
-
       <Routes>
         <Route path="/payment" element={<Payment />} />
         <Route path="/result" element={<Result />} />
