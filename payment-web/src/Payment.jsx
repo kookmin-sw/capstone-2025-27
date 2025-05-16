@@ -29,7 +29,7 @@ const Payment = () => {
         buyer_email: email,
         buyer_name: name,
         buyer_tel: phone,
-        // m_redirect_url: "https://expo.dev/@yourname/yourapp/--/payment-result",
+        m_redirect_url: "https://capstone-2025-27-cashqna-payment.vercel.app/result?success=true",
       },
       async (rsp) => {
         if (rsp.success) {
