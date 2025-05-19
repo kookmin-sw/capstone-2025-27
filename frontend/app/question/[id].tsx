@@ -35,6 +35,7 @@ export default function QuestionDetailPage() {
     console.log(replyId);
     if (typeof question == "undefined") return
     const res = await setChosenReply(question?.id, replyId)
+    router.push("/(tabs)")
     if (res == false) {
       Alert.alert("답변 채택 실패", "현상금 부여할 답변 채택을 실패하였습니다")
     }
