@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.domain.User;
 import com.example.backend.dto.QuestionInfoResponseDto;
 import com.example.backend.dto.QuestionRequestDto;
 import com.example.backend.dto.QuestionResponseDto;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -70,8 +72,16 @@ public class QuestionService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND))
                 .getUsername();
 
-        Reply selectedReply = replyRepository.findById(question.getSelectedAnswerId()).orElseThrow();
-        String selectedReplyAuthorName = userRepository.findById(selectedReply.getAuthorId()).orElseThrow().getUsername();
+//        Reply selectedReply = replyRepository.findById(question.getSelectedAnswerId()).orElseThrow();
+//        String selectedReplyAuthorName = userRepository.findById(selectedReply.getAuthorId()).orElseThrow().getUsername();
+        Optional<Reply> selectedReplyOpt = Optional.ofNullable(question.getSelectedAnswerId())
+                .flatMap(replyRepository::findById);
+
+        String selectedReplyAuthorName = selectedReplyOpt
+                .map(Reply::getAuthorId)
+                .flatMap(userRepository::findById)
+                .map(User::getUsername)
+                .orElse(null);
 
         return new QuestionInfoResponseDto(question, authorName, selectedReplyAuthorName);
     }
